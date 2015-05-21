@@ -3,6 +3,7 @@
  * ***************/
 
 var gulp = require('gulp'),
+  bower = require('gulp-bower'),
   plumber = require('gulp-plumber'),
   uglify = require('gulp-uglify'),
   concat = require('gulp-concat'),
@@ -41,9 +42,14 @@ path.SERVER_SRC = path.SERVER_DIR + 'server.js';
  * ************/
 
 gulp.task('default', []);
-gulp.task('build', ['vendor']);
+gulp.task('build', ['bower', 'vendor']);
 gulp.task('server', ['nodemon']);
 gulp.task('dev', ['build', 'watch']);
+
+/* Download bower componenets */
+gulp.task('bower', function(){
+  return bower().pipe(gulp.dest(path.BOWER_COMPONENTS_DIR));
+});
 
 /* Uglify and concat third party libraries/frameworks */
 gulp.task('vendor', function() {

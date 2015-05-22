@@ -14,7 +14,9 @@
     "gulp-plumber": "^1.0.0",
     "gulp-uglify": "^1.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "request": "^2.55.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/TrollPay/TrollPay.git"

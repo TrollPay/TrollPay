@@ -1,8 +1,10 @@
 var express = require('express');
 var path = require('path');
+var mongoose = require('mongoose');
+
 var api = require('./config.js');
 var utils = require('./utils.js');
-var mongoose = require('mongoose');
+var PaymentController = require('./database/payments/PaymentController.js');
 
 // Get API secret & app id
 
@@ -15,32 +17,30 @@ var mongo_host = process.env.MONGO_HOST || 'mongodb://localhost/test';
 var app = express();
 
 // Connect to MongoDB
-
 mongoose.connect(mongo_host);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-
-// import User and Trollpayments Models
-
-var Payment = require('./database/models/paymentModel.js');
-
+db.once('open', function() {
+  console.log('Connected to MongoDB.');
+});
 
 // Use the static assets from the client directory
 // app.use(express.static(path.resolve("./client")));
 
 // GET Requests
+app.get('/test', function(req, res) {});
 
 app.get('/pay', function(req, res) {
-  var url = "https://api.venmo.com/v1/oauth/authorize?client_id="+app_id+"&scope=make_payments%20access_profile%20access_email%20access_phone%20access_balance&response_type=code";
+  var url = "https://api.venmo.com/v1/oauth/authorize?client_id=" + app_id + "&scope=make_payments%20access_profile%20access_email%20access_phone%20access_balance&response_type=code";
   res.redirect(url);
 });
 
 app.post('/Users', function(req, res) {
-  
-})
+
+});
 
 app.get('/', function(req, res) {
-  if (req.url.search('code') > -1) {
+  if(req.url.search('code') > -1) {
     var auth_code = req.url.substr(7);
     utils.getToken(auth_code, function(body) {
       var response = body;
@@ -49,12 +49,11 @@ app.get('/', function(req, res) {
     });
     //you could res.send the body outside of the utils function
     //TODO: Import our mongo database and use it here to store our initial data about the user
-  }
-  else {
+  } else {
     console.log(req.url);
     res.send("hello world 2");
   }
-})
+});
 
 app.get('dist/vendor/react-with-jsxtransformer.min.js', function(req, res) {
   res.sendFile('./dist/vendor/react-with-jsxtransformer.min.js');

@@ -2,13 +2,12 @@ var mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
-  sender_id: String,  // encrypted
+  sender_id: String, // encrypted
   recipient_email: String,
   note: String,
+  isCancelled: Boolean,
   created_at: Date,
-  payment: {
-    total: Number,
-    balance: Number,
-    installments: [Date]
-  }
+  total: Number,
+  balance: Number,
+  installments: [Date]
 });

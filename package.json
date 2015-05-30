@@ -13,7 +13,8 @@
     "gulp-concat": "^2.5.2",
     "gulp-nodemon": "^2.0.3",
     "gulp-plumber": "^1.0.0",
-    "gulp-uglify": "^1.2.0"
+    "gulp-uglify": "^1.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "mongoose": "^4.0.3",

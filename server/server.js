@@ -48,23 +48,28 @@ app.get('/test', function(req, res) {
     .catch(function(err) {});
 
   // test cancelling a payment asynchronously
-  PaymentController.cancelPaymentAsync('556a2ceb2a507b0e0ff73cab')
+  PaymentController.cancelPaymentAsync('556cbca6dc8f7d531b55f37a')
     .then(function(result) {
       console.log('Cancelled', result.nModified, 'payments');
     })
     .catch(function(err) {});
 });
 
-app.get('/pay', function(req, res) {
+app.get('/login', function(req, res) {
   var url = "https://api.venmo.com/v1/oauth/authorize?client_id=" + app_id + "&scope=make_payments%20access_profile%20access_email%20access_phone%20access_balance&response_type=code";
   res.redirect(url);
 });
 
-app.post('/Users', function(req, res) {
-
-});
-
 app.get('/', function(req, res) {
+
+  // Check cookie for current user
+  // decrypt ID to see if user exists in collection
+  //
+  // user exists:
+  // redirect to: /dashboard
+  // else
+  // show form
+
   console.log(req.url);
 
   if (req.url.search('code') > -1) {
@@ -72,7 +77,9 @@ app.get('/', function(req, res) {
     utils.getToken(auth_code, function(body) {
       var response = body;
       response_dict = JSON.parse(body);
+      console.log(response_dict);
       res.send("<img src=" + response_dict.user.profile_picture_url + " />");
+
     });
     //you could res.send the body outside of the utils function
     //TODO: Import our mongo database and use it here to store our initial data about the user

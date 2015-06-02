@@ -1,8 +1,15 @@
 var Url = require('url'); // https://nodejs.org/api/url.html
-var Promises = require('bluebird');
-var PaymentController = Promises.promisifyAll(require('./database/payments/PaymentController.js'));
-var UserController = Promises.promisifyAll(require('./database/users/UserController.js'));
-var UserUtils = Promises.promisifyAll(require('./database/users/UserUtils.js'));
+// Local Modules
+var api = require('./config.js');
+var routes = require('./routes.js');
+var PaymentController = require('./database/payments/PaymentController.js');
+var UserController = require('./database/users/UserController.js');
+var UserUtils = require('./database/users/UserUtils.js');
+
+// Set environment variables
+var api_secret = process.env.API_SECRET || api.secret;
+var app_id = process.env.APP_ID || api.id;
+var mongo_host = process.env.MONGO_HOST || 'mongodb://localhost/test';
 
 module.exports.confirm = function(req, res) {
   var url = Url.parse(req.url, true);
@@ -13,14 +20,14 @@ module.exports.confirm = function(req, res) {
   }
   var ipAddress = req.connection.remoteAddress;
 
-  UserUtils.getVenmoAsync(auth_code, ipAddress)
+  UserUtils.getVenmo(auth_code, ipAddress)
     .then(UserController.createNewUser)
-    .then(UserController.insertNewUserAsync)
+    .then(UserController.insertNewUser)
     .then(function(user) {
       res.send('Saved Venmo credentials!');
     })
-    .catch(function(err) {
-      console.log('ERROR: Could not get Venmo credentials.');
+    .catch(function(error) {
+      console.log(error);
       res.send('Bad Venmo credentials');
     });
 };

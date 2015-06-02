@@ -1,9 +1,10 @@
 // Default Modules
 var Url = require('url'); // https://nodejs.org/api/url.html
+var path = require('path');
 
 // NPM Modules
 var express = require('express');
-var mongoose = require('mongoose');
+var Mongoose = require('mongoose');
 
 // Local Modules
 var api = require('./config.js');
@@ -15,8 +16,8 @@ var app_id = process.env.APP_ID || api.id;
 var mongo_host = process.env.MONGO_HOST || 'mongodb://localhost/test';
 
 // Connect to MongoDB
-mongoose.connect(mongo_host);
-var db = mongoose.connection;
+Mongoose.connect(mongo_host);
+var db = Mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Connected to MongoDB.');

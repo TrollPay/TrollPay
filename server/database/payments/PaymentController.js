@@ -1,16 +1,17 @@
-var mongoose = require('mongoose');
+var Promise = require('bluebird');
+var Mongoose = Promise.promisifyAll(require('mongoose'));
 var _ = require('underscore');
-var paymentSchema = require('./PaymentSchema.js');
 
 // The Payment model
-var Payment = mongoose.model('Payment', paymentSchema);
+var PaymentSchema = require('./PaymentSchema.js');
+var Payment = Mongoose.model('Payment', PaymentSchema);
 
 /**
  * addNewPayment creates a new Payment document and adds it to the collection.
  *
  * @param {Object} properties An object with all the properties on the schema, except the defaults.
  */
-module.exports.addNewPayment = function(properties, callback) {
+module.exports.addNewPayment = function(properties) {
 
   // Attach defaults
   // TODO: DO THIS CLIENT SIDE
@@ -24,16 +25,18 @@ module.exports.addNewPayment = function(properties, callback) {
   // create new Payment document
   var newPayment = Payment(properties);
 
-  // Saves the Payment document
-  newPayment.save(function(err, payment) {
-    if (err) {
-      console.log('ERROR: Could not add new payment');
-      callback(true, err);
-    } else {
-      console.log('SUCCESS: Payment added');
-      callback(false, payment);
-    }
+  return new Promise(function(resolve, reject) {
+    newPayment.save(function(err, payment) {
+      if (err) {
+        console.log('Could not add new payment');
+        reject(err);
+      } else {
+        console.log('Payment added');
+        resolve(payment);
+      }
+    });
   });
+
 };
 
 /**
@@ -48,23 +51,25 @@ module.exports.processPayments = function(callback) {
  *
  * @param {Number} id Payment ID
  */
-module.exports.cancelPayment = function(id, callback) {
+module.exports.cancelPayment = function(id) {
+  return new Promise(function(resolve, reject) {
+    Payment.update({
+      '_id': id
+    }, {
+      'isCancelled': true
+    }, function(err, result) {
+      if (err) {
+        console.log('Could not cancel payment');
+        reject(err);
+      } else if (result.nModified < 1) {
+        console.log('Payment is already cancelled');
+        resolve(result);
+      } else {
+        console.log('Payment cancelled');
+        resolve(result);
+      }
+    });
 
-  Payment.update({
-    '_id': id
-  }, {
-    'isCancelled': true
-  }, function(err, result) {
-    if (err) {
-      console.log('ERROR: Could not cancel payment');
-      callback(true, err);
-    } else if (result.nModified < 1) {
-      console.log('WARNING: Payment is already cancelled');
-      callback(false, result);
-    } else {
-      console.log('SUCCESS: Payment cancelled');
-      callback(false, result);
-    }
   });
 
 };

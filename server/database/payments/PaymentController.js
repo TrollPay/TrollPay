@@ -1,5 +1,5 @@
 var Promise = require('bluebird');
-var Mongoose = Promise.promisifyAll(require('mongoose'));
+var Mongoose = require('mongoose');
 var _ = require('underscore');
 
 // The Payment model
@@ -54,21 +54,22 @@ module.exports.processPayments = function(callback) {
 module.exports.cancelPayment = function(id) {
   return new Promise(function(resolve, reject) {
     Payment.update({
-      '_id': id
-    }, {
-      'isCancelled': true
-    }, function(err, result) {
-      if (err) {
-        console.log('Could not cancel payment');
-        reject(err);
-      } else if (result.nModified < 1) {
-        console.log('Payment is already cancelled');
-        resolve(result);
-      } else {
-        console.log('Payment cancelled');
-        resolve(result);
-      }
-    });
+        '_id': id
+      }, {
+        'isCancelled': true
+      },
+      function(err, result) {
+        if (err) {
+          console.log('Could not cancel payment');
+          reject(err);
+        } else if (result.nModified < 1) {
+          console.log('Payment is already cancelled');
+          resolve(result);
+        } else {
+          console.log('Payment cancelled');
+          resolve(result);
+        }
+      });
 
   });
 

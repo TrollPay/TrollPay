@@ -45,7 +45,7 @@ module.exports.insertNewUser = function(newUser) {
     module.exports.getUser(newUser.venmo_id)
       .then(function(user) {
         if (!user) {
-          User.save(function(err, saved) {
+          newUser.save(function(err, saved) {
             if (err) {
               console.log('Could not save new user');
               reject(err);

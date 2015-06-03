@@ -27,7 +27,7 @@ db.once('open', function() {
 var app = express();
 
 // Use the static assets from the client directory
-app.use(express.static(path.resolve("../client")));
+app.use(express.static("client"));
 
 // GET Requests
 app.get('/confirm', routes.confirm);

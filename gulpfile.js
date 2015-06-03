@@ -35,6 +35,14 @@ path.REACT_SRC = [
 ];
 path.REACT_MIN_SRC = 'react-with-jsxtransformer.min.js';
 
+//JQuery
+
+path.JQUERY_DIR = path.BOWER_COMPONENTS_DIR + 'jqeury/dist/';
+path.JQUERY_SRC = [
+  path.JQUERY_DIR + 'jquery.js'
+];
+path.JQUERY_MIN_SRC = 'jquery.min.js';
+
 //Boostrap
 path.BOOTSTRAP_DIR = path.BOWER_COMPONENTS_DIR + 'bootstrap/';
 path.BOOTSTRAP_JS_DIR = path.BOOTSTRAP_DIR + '/dist/js/';
@@ -79,6 +87,14 @@ gulp.task('vendor', function() {
     .pipe(plumber())
     .pipe(uglify())
     .pipe(concat(path.REACT_MIN_SRC))
+    .pipe(gulp.dest(path.VENDOR_DIR));
+
+  //JQuery
+
+  gulp.src(path.JQUERY_SRC)
+    .pipe(plumber())
+    .pipe(uglify())
+    .pipe(concat(path.JQUERY_MIN_SRC))
     .pipe(gulp.dest(path.VENDOR_DIR));
 
   //Bootstrap JS

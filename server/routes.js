@@ -15,6 +15,7 @@ module.exports.confirm = function(req, res) {
   var url = Url.parse(req.url, true);
   var auth_code = url.query.code;
   if (!auth_code) {
+    console.log('No auth_code provided on url');
     res.send('Bad Venmo credentials');
     return;
   }

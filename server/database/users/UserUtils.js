@@ -2,8 +2,8 @@ var request = require('request');
 var Promise = require('bluebird');
 
 // Set environment variables
-var api_secret = process.env.API_SECRET || (function(){ return require('../../config.js').secret; })();
-var app_id = process.env.APP_ID || require('../../config.js').id;
+var api_secret = process.env.API_SECRET;
+var app_id = process.env.APP_ID;
 
 module.exports.getVenmo = function(auth_code, ip) {
   return new Promise(function(resolve, reject) {

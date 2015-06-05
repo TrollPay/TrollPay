@@ -1,15 +1,15 @@
 var Url = require('url'); // https://nodejs.org/api/url.html
+
 // Local Modules
-var api = require('./config.js');
 var routes = require('./routes.js');
 var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
 var UserUtils = require('./database/users/UserUtils.js');
 
 // Set environment variables
-var api_secret = process.env.API_SECRET || api.secret;
-var app_id = process.env.APP_ID || api.id;
-var mongo_host = process.env.MONGO_HOST || 'mongodb://localhost/test';
+var api_secret = process.env.API_SECRET;
+var app_id = process.env.APP_ID;
+var mongo_host = process.env.DATABASE_URL;
 
 module.exports.confirm = function(req, res) {
   var url = Url.parse(req.url, true);

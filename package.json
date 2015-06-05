@@ -4,7 +4,7 @@
   "description": "Send money to your friends...in $1 increments.",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postInstall": "gulp build"
   },
   "dependencies": {
     "bluebird": "^2.9.27",

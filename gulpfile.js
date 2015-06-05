@@ -54,7 +54,6 @@ path.SERVER_SRC = './server/server.js';
 gulp.task('default', []);
 gulp.task('build', ['bower', 'vendor']);
 gulp.task('server', ['foreman']);
-gulp.task('dev', ['build', 'watch']);
 
 /* Download bower componenets */
 gulp.task('bower', function() {
@@ -93,8 +92,7 @@ gulp.task('vendor', function() {
 
 });
 
-
-/* Start the server with nodemon */
+/* Start a local development server with nodemon */
 gulp.task('foreman', function() {
   foreman({
     procfile: 'Procfile.dev',

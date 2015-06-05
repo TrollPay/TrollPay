@@ -16,6 +16,7 @@
   "dependencies": {
     "react": "~0.13.3",
     "bootstrap": "~3.3.4",
-    "bootstrap-plugin": "git@github.com:TrollPay/bootstrap-plugin.git"
+    "bootstrap-plugin": "git@github.com:TrollPay/bootstrap-plugin.git",
+    "react-router": "~0.13.3"
   }
 }

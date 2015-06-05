@@ -18,6 +18,7 @@
     "gulp-plumber": "^1.0.0",
     "gulp-uglify": "^1.2.0",
     "mongoose": "^4.0.3",
+    "react": "^0.13.3",
     "request": "^2.55.0",
     "underscore": "^1.8.3"
   },
@@ -30,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/TrollPay/TrollPay/issues"
   },
-  "homepage": "https://github.com/Trollpay/TrollPay"
+  "homepage": "https://github.com/Trollpay/TrollPay",
+  "devDependencies": {
+    "ejs": "^2.3.1"
+  }
 }

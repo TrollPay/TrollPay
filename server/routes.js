@@ -32,8 +32,3 @@ module.exports.confirm = function(req, res) {
       res.send('Bad Venmo credentials');
     });
 };
-
-module.exports.login = function(req, res) {
-  var url = "https://api.venmo.com/v1/oauth/authorize?client_id=" + app_id + "&scope=make_payments%20access_profile%20access_email%20access_phone%20access_balance&response_type=code";
-  res.redirect(url);
-};

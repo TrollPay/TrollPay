@@ -7,7 +7,7 @@ var gulp = require('gulp'),
   plumber = require('gulp-plumber'),
   uglify = require('gulp-uglify'),
   concat = require('gulp-concat'),
-  nodemon = require('gulp-nodemon'),
+  foreman = require('gulp-foreman'),
   minifyCss = require('gulp-minify-css');
 
 /* ************
@@ -16,54 +16,36 @@ var gulp = require('gulp'),
 
 var path = {};
 
-/* Root */
-path.BOWER_COMPONENTS_DIR = './bower_components/';
-
 /* Client */
+path.BOWER_COMPONENTS_DIR = './bower_components';
+path.VENDOR_JS_DIR = './client/dist/js/vendor/';
+path.VENDOR_CSS_DIR = './client/dist/css/vendor/';
 
 //React
-path.CLIENT_DIR = './client/';
-path.DIST_DIR = path.CLIENT_DIR + './dist/';
-path.VENDOR_DIR = path.DIST_DIR + 'vendor/';
-
-path.INDEX_SRC = path.CLIENT_DIR + 'index.html';
-
-path.REACT_DIR = path.BOWER_COMPONENTS_DIR + 'react/';
 path.REACT_SRC = [
-  path.REACT_DIR + 'react.js',
-  path.REACT_DIR + 'JSXTransformer.js'
+  './bower_components/react/react.js',
+  './bower_components/react/JSXTransformer.js'
 ];
-path.REACT_MIN_SRC = 'react-with-jsxtransformer.min.js';
+path.REACT_MIN = 'react-with-jsxtransformer.min.js';
 
-//JQuery
-
-path.JQUERY_DIR = path.BOWER_COMPONENTS_DIR + 'jqeury/dist/';
-path.JQUERY_SRC = [
-  path.JQUERY_DIR + 'jquery.js'
-];
-path.JQUERY_MIN_SRC = 'jquery.min.js';
+// JQuery
+path.JQUERY_SRC = './bower_components/jquery/dist/jquery.min.js';
+path.JQUERY_MAP_SRC = './bower_components/jquery/dist/jquery.min.map';
 
 //Boostrap
-path.BOOTSTRAP_DIR = path.BOWER_COMPONENTS_DIR + 'bootstrap/';
-path.BOOTSTRAP_JS_DIR = path.BOOTSTRAP_DIR + '/dist/js/';
-path.BOOTSTRAP_CSS_DIR = path.BOOTSTRAP_DIR + '/dist/css/';
-
 path.BOOTSTRAP_JS_SRC = [
-  path.BOOTSTRAP_JS_DIR + 'bootstrap.js',
-  path.BOOTSTRAP_JS_DIR + 'npm.js'
+  './bower_components/bootstrap/dist/js/bootstrap.js'
 ];
-path.BOOTSTRAP_JS_MIN_SRC = 'bootstrap-with-npm.min.js';
+path.BOOTSTRAP_JS_MIN = 'bootstrap.min.js';
 
 path.BOOTSTRAP_CSS_SRC = [
-  path.BOOTSTRAP_CSS_DIR + 'bootstrap-theme.css',
-  path.BOOTSTRAP_CSS_DIR + 'bootstrap.css'
-]
-path.BOOTSTRAP_CSS_MIN_SRC = 'bootstrap.min.css'
+  './bower_components/bootstrap/dist/css/bootstrap-theme.css',
+  './bower_components/bootstrap/dist/css/bootstrap.css'
+];
+path.BOOTSTRAP_CSS_MIN = 'bootstrap.min.css';
 
 /* Server */
-path.SERVER_DIR = './server/';
-
-path.SERVER_SRC = path.SERVER_DIR + 'server.js';
+path.SERVER_SRC = './server/server.js';
 
 /* ************
  * GULP TASKS *
@@ -71,11 +53,10 @@ path.SERVER_SRC = path.SERVER_DIR + 'server.js';
 
 gulp.task('default', []);
 gulp.task('build', ['bower', 'vendor']);
-gulp.task('server', ['nodemon']);
-gulp.task('dev', ['build', 'watch']);
+gulp.task('server', ['foreman']);
 
 /* Download bower componenets */
-gulp.task('bower', function(){
+gulp.task('bower', function() {
   return bower().pipe(gulp.dest(path.BOWER_COMPONENTS_DIR));
 });
 
@@ -86,46 +67,35 @@ gulp.task('vendor', function() {
   gulp.src(path.REACT_SRC)
     .pipe(plumber())
     .pipe(uglify())
-    .pipe(concat(path.REACT_MIN_SRC))
-    .pipe(gulp.dest(path.VENDOR_DIR));
+    .pipe(concat(path.REACT_MIN))
+    .pipe(gulp.dest(path.VENDOR_JS_DIR));
 
-  //JQuery
-
+  // jQuery
   gulp.src(path.JQUERY_SRC)
-    .pipe(plumber())
-    .pipe(uglify())
-    .pipe(concat(path.JQUERY_MIN_SRC))
-    .pipe(gulp.dest(path.VENDOR_DIR));
+    .pipe(gulp.dest(path.VENDOR_JS_DIR));
+  gulp.src(path.JQUERY_MAP_SRC)
+    .pipe(gulp.dest(path.VENDOR_JS_DIR));
 
-  //Bootstrap JS
+  // Bootstrap JS
   gulp.src(path.BOOTSTRAP_JS_SRC)
     .pipe(plumber())
     .pipe(uglify())
-    .pipe(concat(path.BOOTSTRAP_JS_MIN_SRC))
-    .pipe(gulp.dest(path.VENDOR_DIR));
+    .pipe(concat(path.BOOTSTRAP_JS_MIN))
+    .pipe(gulp.dest(path.VENDOR_JS_DIR));
 
-  //BOOTSTRAP CSS
+  // Bootstrap CSS
   gulp.src(path.BOOTSTRAP_CSS_SRC)
     .pipe(plumber())
     .pipe(minifyCss())
-    .pipe(concat(path.BOOTSTRAP_CSS_MIN_SRC))
-    .pipe(gulp.dest(path.VENDOR_DIR));
+    .pipe(concat(path.BOOTSTRAP_CSS_MIN))
+    .pipe(gulp.dest(path.VENDOR_CSS_DIR));
 
 });
 
-
-/* Start the server with nodemon */
-gulp.task('nodemon', function() {
-  nodemon({
-    script: path.SERVER_SRC,
-    ext: 'js html'
+/* Start a local development server with nodemon */
+gulp.task('foreman', function() {
+  foreman({
+    procfile: 'Procfile.dev',
+    env: '.env'
   });
-});
-
-gulp.task('log', function(){
-  console.log('yes');
-});
-
-gulp.task('watch', function() {
-  gulp.watch(path.INDEX_SRC, ['log']);
 });

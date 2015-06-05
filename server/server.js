@@ -12,7 +12,7 @@ var routes = require('./routes.js');
 // Set environment variables
 var api_secret = process.env.API_SECRET;
 var app_id = process.env.APP_ID;
-var mongo_host = process.env.DATABASE_URL;
+var mongo_host = process.env.MONGOLAB_URI;
 var port = process.env.PORT;
 
 // Connect to MongoDB

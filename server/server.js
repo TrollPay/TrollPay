@@ -27,7 +27,7 @@ db.once('open', function() {
 var app = express();
 
 // Serve static assets automatically (eg: index.html, vendor assets, etc);
-app.use(express.static("client"));
+app.use(express.static(path.join(__dirname, '../client')));
 
 // GET Requests
 app.get('/confirm', routes.confirm);

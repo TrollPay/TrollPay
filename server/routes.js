@@ -9,7 +9,6 @@ var UserUtils = require('./database/users/UserUtils.js');
 // Set environment variables
 var api_secret = process.env.API_SECRET;
 var app_id = process.env.APP_ID;
-var mongo_host = process.env.DATABASE_URL;
 
 module.exports.confirm = function(req, res) {
   var url = Url.parse(req.url, true);

@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "Send money to your friends...in $1 increments.",
   "main": "gulpfile.js",
-  "scripts": {
-    "postInstall": "gulp build"
-  },
+  "scripts": {},
   "dependencies": {
     "bluebird": "^2.9.27",
+    "bower": "^1.4.1",
     "express": "^4.12.3",
     "gulp": "^3.8.11",
     "gulp-bower": "0.0.10",

@@ -19,6 +19,7 @@ var App = React.createClass({
 var routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Signup} />
+    <Route name="confirm" handler={Confirm} />
   </Route>
 );
 

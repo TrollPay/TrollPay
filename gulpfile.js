@@ -53,7 +53,7 @@ path.SERVER_SRC = './server/server.js';
 
 gulp.task('default', []);
 gulp.task('build', ['bower', 'vendor']);
-gulp.task('server', ['foreman']);
+gulp.task('server', ['build', 'foreman']);
 
 /* Download bower componenets */
 gulp.task('bower', function() {

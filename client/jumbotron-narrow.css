@@ -52,6 +52,7 @@ body {
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
+  background-color: #e6e6e6;
 }
 
 .jumbotron h1 {
@@ -86,5 +87,6 @@ body {
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;
+    background-color: #e6e6e6;
   }
 }

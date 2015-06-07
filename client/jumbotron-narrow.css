@@ -2,6 +2,10 @@
 body {
   padding-top: 20px;
   padding-bottom: 20px;
+  background: #EFEFEF;
+  color:#666666;
+  font-family: 'Chivo', sans-serif;
+  font-weight: 400;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -22,6 +26,9 @@ body {
   margin-top: 0;
   margin-bottom: 0;
   line-height: 40px;
+  color:#666;
+  font-family: 'Chivo', sans-serif;
+  font-weight: 900;
 }
 
 /* Custom page footer */
@@ -45,6 +52,10 @@ body {
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron h1 {
+  font-size: 3em;
 }
 .jumbotron .btn {
   padding: 14px 24px;

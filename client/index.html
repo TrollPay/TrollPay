@@ -1,98 +1,98 @@
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
 
-    <title>Narrow Jumbotron Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="dist/css/vendor/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="jumbotron-narrow.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+  <title>TrollPay for Venmo</title>
+  <!-- Bootstrap core CSS -->
+  <link href="dist/css/vendor/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotron-narrow.css" rel="stylesheet">
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
+</head>
 
-  <body>
+<body>
+  <div class="container">
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills pull-right">
+          <li role="presentation" class="active"><a href="#">Home</a></li>
+          <li role="presentation"><a href="#">Login</a></li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">TrollPay</h3>
+    </div>
+    <div class="jumbotron">
+      <h1>Send money to your friends...</h1>
+      <p class="lead">in $1 increments.</p>
+      <form class="form-horizontal">
+        <fieldset>
+          <!-- Form Name -->
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="textinput">Recipient Email</label>
+            <div class="col-md-5">
+              <input id="textinput" name="textinput" type="text" placeholder="bob@example.com" class="form-control input-md">
+            </div>
+          </div>
+          <!-- Prepended text-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="prependedtext">Amount</label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input id="prependedtext" name="prependedtext" class="form-control" placeholder="10.00" type="text">
+              </div>
+            </div>
+          </div>
+          <!-- Textarea -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="textarea">What's it for?</label>
+            <div class="col-md-4">
+              <textarea class="form-control" id="textarea" name="textarea"></textarea>
+            </div>
+          </div>
+          <!-- Button -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="singlebutton"></label>
+            <div class="col-md-4">
+              <button id="singlebutton" name="singlebutton" class="btn btn-primary">Authorize with Venmo</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div id="app"></div>
+    <footer class="footer">
+      <p>&copy; Company 2015</p>
+    </footer>
+  </div>
+  <!-- /container -->
+  <link href='http://fonts.googleapis.com/css?family=Chivo:400,900' rel='stylesheet' type='text/css'>
+  <!-- JQuery -->
+  <script src="dist/js/vendor/jquery.min.js"></script>
+  <!-- Bootstrap JS Framework -->
+  <script src="dist/js/vendor/bootstrap.min.js"></script>
+  <!-- ReactJS Framework -->
+  <script src="dist/js/vendor/react-with-jsxtransformer.min.js"></script>
+  <!-- React-router CDN Temp -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/0.13.3/ReactRouter.min.js"></script>
+  <!-- React build components -->
+  <script src="build/input.jsx" type="text/jsx"></script>
+  <script src="build/signup.jsx" type="text/jsx"></script>
+  <script src="build/confirm.jsx" type="text/jsx"></script>
+  <script src="build/app.jsx" type="text/jsx"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+</body>
 
-    <div class="container">
-      <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
-            <li role="presentation"><a href="#">About</a></li>
-            <li role="presentation"><a href="#">Contact</a></li>
-          </ul>
-        </nav>
-        <h3 class="text-muted">TrollPay</h3>
-      </div>
-
-      <div class="jumbotron">
-        <h1>TrollPay</h1>
-        <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-      </div>
-
-      <div id="app"></div>
-
-      <div class="row marketing">
-        <div class="col-lg-6">
-          <h4>Subheading</h4>
-          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-        </div>
-
-        <div class="col-lg-6">
-          <h4>Subheading</h4>
-          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-        </div>
-      </div>
-
-      <footer class="footer">
-        <p>&copy; Company 2015</p>
-      </footer>
-
-    </div> <!-- /container -->
-
-    <!-- JQuery -->
-    <script src="dist/js/vendor/jquery.min.js"></script>
-
-    <!-- Bootstrap JS Framework -->
-    <script src="dist/js/vendor/bootstrap.min.js"></script>
-
-    <!-- ReactJS Framework -->
-    <script src="dist/js/vendor/react-with-jsxtransformer.min.js"></script>
-
-    <!-- React-router CDN Temp -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/0.13.3/ReactRouter.min.js"></script>
-
-    <!-- React build components -->
-    <script src="build/input.jsx" type="text/jsx"></script>
-    <script src="build/signup.jsx" type="text/jsx"></script>
-    <script src="build/confirm.jsx" type="text/jsx"></script>
-    <script src="build/app.jsx" type="text/jsx"></script>
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
-  </body>
 </html>

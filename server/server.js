@@ -32,6 +32,9 @@ app.use(express.static(path.join(__dirname, '../client')));
 // GET Requests
 app.get('/confirm', routes.confirm);
 
+// POST Requests
+app.post('/payment/create', routes.createPayment);
+
 // Start the server
 var server = app.listen(port, function() {
   console.log('Listening on port:', port);

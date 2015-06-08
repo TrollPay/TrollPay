@@ -10,6 +10,12 @@ var UserUtils = require('./database/users/UserUtils.js');
 var api_secret = process.env.API_SECRET;
 var app_id = process.env.APP_ID;
 
+module.exports.createPayment = function(req, res) {
+  console.log(req.data);
+  //send out the 
+  res.send("Done");
+}
+
 module.exports.confirm = function(req, res) {
   var url = Url.parse(req.url, true);
   var auth_code = url.query.code;

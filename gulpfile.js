@@ -8,7 +8,8 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   concat = require('gulp-concat'),
   foreman = require('gulp-foreman'),
-  minifyCss = require('gulp-minify-css');
+  minifyCss = require('gulp-minify-css'),
+  react = require('gulp-react');
 
 /* ************
  * FILE PATHS *
@@ -20,19 +21,27 @@ var path = {};
 path.BOWER_COMPONENTS_DIR = './bower_components';
 path.VENDOR_JS_DIR = './client/dist/js/vendor/';
 path.VENDOR_CSS_DIR = './client/dist/css/vendor/';
+path.BUILD_JS_DIR = './client/dist/js/build';
 
-//React
+/* Build */
+path.BUILD_JSX = [ 
+  './client/build/views/*.jsx',
+  './client/build/*.jsx'
+];
+path.BUILD_MIN = 'build-jsx.min.js';
+
+/* React */
 path.REACT_SRC = [
   './bower_components/react/react.js',
   './bower_components/react/JSXTransformer.js'
 ];
 path.REACT_MIN = 'react-with-jsxtransformer.min.js';
 
-// JQuery
+/* JQuery */
 path.JQUERY_SRC = './bower_components/jquery/dist/jquery.min.js';
 path.JQUERY_MAP_SRC = './bower_components/jquery/dist/jquery.min.map';
 
-//Boostrap
+/* Boostrap */
 path.BOOTSTRAP_JS_SRC = [
   './bower_components/bootstrap/dist/js/bootstrap.js'
 ];
@@ -52,12 +61,23 @@ path.SERVER_SRC = './server/server.js';
  * ************/
 
 gulp.task('default', []);
-gulp.task('build', ['bower', 'vendor']);
+gulp.task('build', ['bower', 'vendor', 'buildApp']);
 gulp.task('dev', ['build', 'foreman']);
 
-/* Download bower componenets */
+/* Download bower components */
 gulp.task('bower', function() {
   return bower().pipe(gulp.dest(path.BOWER_COMPONENTS_DIR));
+});
+
+/* Uglify and concat our app build jsx and js files */
+
+gulp.task('buildApp', function() {
+  //JSX
+  gulp.src(path.BUILD_JSX)
+    .pipe(react())
+    .pipe(concat(path.BUILD_MIN))
+    .pipe(gulp.dest(path.BUILD_JS_DIR));
+
 });
 
 /* Uglify and concat third party libraries/frameworks */

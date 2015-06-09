@@ -2,9 +2,9 @@ var Confirm = React.createClass({
   getInitialState: function() {
     return {
       picture: null,
-      total : null || localStorage["$Total Amount"],
-      note: null || localStorage["Optional note"], 
-      email: null || localStorage["Recipient's email"]
+      total : localStorage["total"],
+      note: localStorage["note"], 
+      recipient_email: localStorage["recipient_email"]
     }
   },
   handleSubmit: function(e) {
@@ -24,7 +24,7 @@ var Confirm = React.createClass({
         ip_log: [null]
       },
       payment: {
-        recipient_email: this.state.email,
+        recipient_email: this.state.recipient_email,
         total: this.state.total,
         note: this.state.note,
         isCancelled: false,
@@ -53,7 +53,7 @@ var Confirm = React.createClass({
         </div>
         <div>
           <h4>Recipient email</h4>
-          <p>{this.state.email}</p>
+          <p>{this.state.recipient_email}</p>
         </div> 
         <form onSubmit={this.handleSubmit}>
           <input type="submit" />

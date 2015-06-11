@@ -33,42 +33,10 @@ var Signup = React.createClass({
       <div>
       <form className="form-horizontal" onSubmit={this.handleSubmit}>
         <fieldset>
-
-          {/* Recipient Input */}
-          <div className="form-group">
-            <label className="col-md-4 control-label" for="textinput">Recipient Email</label>
-            <div className="col-md-5">
-              <input id="textinput" name="recipient_email" type="text" placeholder="bob@example.com" className="form-control input-md"/>
-            </div>
-          </div>
-
-          {/* Amount Input */} 
-          <div className="form-group">
-            <label className="col-md-4 control-label" for="prependedtext">Total Amount</label>
-            <div className="col-md-5">
-              <div className="input-group">
-                <span className="input-group-addon">$</span>
-                <input title="recipient" id="prependedtext" name="total" className="form-control" placeholder="10.00" type="text"/>
-              </div>
-            </div>
-          </div>
-
-          {/* Custom Note */}  
-          <div className="form-group">
-            <label className="col-md-4 control-label" for="textarea">What's it for?</label>
-            <div className="col-md-5">
-              <textarea className="form-control" id="textarea" name="note"></textarea>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="form-group">
-            <label className="col-md-4 control-label" for="singlebutton"></label>
-            <div className="col-md-4">
-              <button id="singlebutton" name="singlebutton" onClick={this.handleSubmit} className="btn btn-primary">Authorize with Venmo</button>
-            </div>
-          </div>
-
+          <Input type='Recipient' />
+          <Input type='Amount' />
+          <Input type='Note' />
+          <Input type='Submit' />
         </fieldset>
       </form>
     </div>

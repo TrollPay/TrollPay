@@ -34,6 +34,7 @@ app.get('/confirm', routes.confirm);
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);
+app.get('/venmo/fetchuser', routes.fetchuser);
 
 // Start the server
 var server = app.listen(port, function() {

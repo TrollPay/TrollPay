@@ -7,6 +7,8 @@ var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
+var Dispatcher = Flux.Dispatcher;
+var AppDispatcher = new Dispatcher();
 
 var App = React.createClass({
   render: function() {

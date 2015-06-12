@@ -7,9 +7,16 @@ var Confirm = React.createClass({
       recipient_email: localStorage["recipient_email"]
     }
   },
+  componentDidMount: function() {
+    AppDispatcher.dispatch({
+      eventName: 'get-user-credentials',
+    })
+  },
+  credentialsRecieved: function() {
+    this.forceUpdate();
+  },
   handleSubmit: function(e) {
     e.preventDefault();
-    //need to use payment controller's addNewPayment method to add this information into our system
     var data = {
       sender: {
         access_token: null,

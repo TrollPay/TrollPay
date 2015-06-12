@@ -30,7 +30,8 @@ path.VENDOR_JS_SRC = [
   './bower_components/bootstrap-plugin/ie10-viewport-bug-workaround.js',
   './bower_components/react/react.js',
   './bower_components/react/JSXTransformer.js',
-  './bower_components/react-router/build/umd/ReactRouter.js'
+  './bower_components/react-router/build/umd/ReactRouter.js',
+  './bower_components/flux/dist/Flux.js'
 ];
 path.VENDOR_JS_MIN = 'vendor.min.js';
 path.VENDOR_CSS_SRC = [
@@ -44,7 +45,9 @@ path.VENDOR_CSS_MIN = 'vendor.min.css';
 path.APP_JS_SRC = [
   './client/build/js/services/*',
   './client/build/js/views/*',
-  './client/build/js/app.jsx'
+  './client/build/js/app.jsx',
+  './client/build/js/stores/*',
+  './client/build/js/dispatcher/*'
 ];
 path.APP_JS_MIN = 'app.min.js';
 path.APP_CSS_SRC = [

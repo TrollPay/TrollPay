@@ -31,7 +31,9 @@ path.VENDOR_JS_SRC = [
   './bower_components/react/react.js',
   './bower_components/react/JSXTransformer.js',
   './bower_components/react-router/build/umd/ReactRouter.js',
-  './bower_components/flux/dist/Flux.js'
+  './bower_components/flux/dist/Flux.js',
+  './bower_components/microevent/microevent.js',
+  './bower_components/url/url.js'
 ];
 path.VENDOR_JS_MIN = 'vendor.min.js';
 path.VENDOR_CSS_SRC = [
@@ -44,9 +46,9 @@ path.VENDOR_CSS_MIN = 'vendor.min.css';
 /* App */
 path.APP_JS_SRC = [
   './client/build/js/services/*',
+  './client/build/js/stores/*',
   './client/build/js/views/*',
   './client/build/js/app.jsx',
-  './client/build/js/stores/*',
   './client/build/js/dispatcher/*'
 ];
 path.APP_JS_MIN = 'app.min.js';

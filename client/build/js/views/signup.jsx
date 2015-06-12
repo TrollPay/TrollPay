@@ -20,6 +20,8 @@ var Signup = React.createClass({
     //TODO: Use checkInputs on all user inputs
     var inputs = Array.prototype.slice.call(document.querySelectorAll('input, textarea'));
     //TODO: Refactor to not use placeholders as the key
+    //TODO: Move this logic to our PaymentStore
+    //TODO: Bind this to listen to a change on out PaymentStore and rerender itself
     inputs.forEach(function(input) {
       if (input.value) {
         this.storeData(input.name, input.value);

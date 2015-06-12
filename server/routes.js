@@ -10,6 +10,20 @@ var UserUtils = require('./database/users/UserUtils.js');
 var api_secret = process.env.API_SECRET;
 var app_id = process.env.APP_ID;
 
+module.exports.fetchUser = function(req, res) {
+  //make the call to venmo api here and send back data on res
+  var data = {
+    client_id: app_id,
+    client_secret: api_secret,
+    code: req.code
+  }
+  var url = 'https://api.venmo.com/v1/users/:user_id?access_token=' + code;
+  $.ajax({
+    url: url,
+    type: "POST",
+  })
+}
+
 module.exports.createPayment = function(req, res) {
   console.log(req.data);
   //send out the 

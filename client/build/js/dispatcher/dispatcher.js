@@ -5,7 +5,7 @@ AppDispatcher.register(function(payload) {
       break;
 
     case 'get-user-credentials':
-      UserStore.getUser();
+      UserStore.getUser(payload.authData.code);
       UserStore.trigger('change');
       break;
   }

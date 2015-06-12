@@ -1,6 +1,3 @@
-MicroEvent.mixin(PaymentStore);
-MicroEvent.mixin(UserStore);
-
 var PaymentStore = {
   payments: [],
   getAll: function() {
@@ -21,8 +18,19 @@ var UserStore = {
     profile_picture_url: null,
     ip_log: [null]
   },
-  getUser: function() {
-    //ping the venmo server with the code and then update the sender object
-    //https://api.venmo.com/v1/users/:user_id?access_token=<access_token>
+  getUser: function(code) {
+    var url = 'https://api.venmo.com/v1/users/:user_id?access_token=' + code;
+    $.get(url, function(data) {
+      console.log(data);
+    });
+  },
+  postData: function() {
+    $.post('/payment/create', data)
+      .done(function(data) {
+        alert('Completed data transmission' + data);
+      });
   }
 }
+
+MicroEvent.mixin(PaymentStore);
+MicroEvent.mixin(UserStore);

@@ -11,6 +11,7 @@ var Confirm = React.createClass({
     UserStore.bind('change', this.credentialsRecieved);
     AppDispatcher.dispatch({
       eventName: 'get-user-credentials',
+      authData: {code: url.code}
     });
   },
   credentialsRecieved: function() {
@@ -18,11 +19,8 @@ var Confirm = React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    AppDispatcher.dispatch({
-      eventName: 'new-payment',
-      newPayment: {payment: data.payment}
-    });
     var data = {
+      access_token: url.code,
       recipient_email: this.state.recipient_email,
       total: this.state.total,
       note: this.state.note,
@@ -31,12 +29,10 @@ var Confirm = React.createClass({
       balance: this.state.total,
       installments: []
     }
-    //send over the data that you have to our server and wait for it at a certain route that you have planned.
-    $.post('/payment/create', data)
-      .done(function(data) {
-        alert('Completed data transmission' + data);
-      });
-    //after submission, change the route to the dashboard page with a sucess message    
+    AppDispatcher.dispatch({
+      eventName: 'new-payment',
+      newPayment: {payment: data}
+    });
   },
   render: function(){
     return (

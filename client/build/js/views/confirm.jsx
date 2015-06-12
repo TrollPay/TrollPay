@@ -8,37 +8,28 @@ var Confirm = React.createClass({
     }
   },
   componentDidMount: function() {
+    UserStore.bind('change', this.credentialsRecieved);
     AppDispatcher.dispatch({
       eventName: 'get-user-credentials',
-    })
+    });
   },
   credentialsRecieved: function() {
     this.forceUpdate();
   },
   handleSubmit: function(e) {
     e.preventDefault();
+    AppDispatcher.dispatch({
+      eventName: 'new-payment',
+      newPayment: {payment: data.payment}
+    });
     var data = {
-      sender: {
-        access_token: null,
-        refresh_token: null,
-        first_name: null,
-        last_name: null,
-        display_name: null,
-        about: null,
-        email: null,
-        phone: null,
-        profile_picture_url: null,
-        ip_log: [null]
-      },
-      payment: {
-        recipient_email: this.state.recipient_email,
-        total: this.state.total,
-        note: this.state.note,
-        isCancelled: false,
-        created_at: new Date().toISOString(),
-        balance: this.state.total,
-        installments: []
-      }
+      recipient_email: this.state.recipient_email,
+      total: this.state.total,
+      note: this.state.note,
+      isCancelled: false,
+      created_at: new Date().toISOString(),
+      balance: this.state.total,
+      installments: []
     }
     //send over the data that you have to our server and wait for it at a certain route that you have planned.
     $.post('/payment/create', data)

@@ -19,6 +19,7 @@
     "bootstrap-plugin": "*",
     "react-router": "~0.13.3",
     "normalize.css": "~3.0.3",
-    "flux": "~2.0.2"
+    "flux": "~2.0.2",
+    "microevent": "~1.1.1"
   }
 }

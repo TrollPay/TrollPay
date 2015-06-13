@@ -1,10 +1,3 @@
-var PaymentStore = {
-  payments: [],
-  getAll: function() {
-    return this.payments;
-  }
-}
-
 var UserStore = {
   sender: {
     access_token: null,
@@ -30,7 +23,6 @@ var UserStore = {
         alert('Completed data transmission' + data);
       });
   }
-}
+};
 
-MicroEvent.mixin(PaymentStore);
 MicroEvent.mixin(UserStore);

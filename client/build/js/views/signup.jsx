@@ -33,8 +33,6 @@ var Signup = React.createClass({
         eventName: 'store-form-in-localStorage',
         formData: {'inputs': inputs}
       });
-    } else{
-      console.log('dat shit aint valid');
     }
   },
 

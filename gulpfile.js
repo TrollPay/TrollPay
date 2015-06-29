@@ -8,7 +8,6 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   concat = require('gulp-concat'),
   foreman = require('gulp-foreman'),
-  minifyCSS = require('gulp-minify-css'),
   react = require('gulp-react');
 
 /* ************
@@ -90,7 +89,6 @@ gulp.task('vendor', function() {
 
   gulp.src(path.VENDOR_CSS_SRC)
     .pipe(plumber())
-    .pipe(minifyCSS())
     .pipe(concat(path.VENDOR_CSS_MIN))
     .pipe(gulp.dest(path.DIST_CSS_DIR));
 });
@@ -104,7 +102,6 @@ gulp.task('app', function() {
 
   gulp.src(path.APP_CSS_SRC)
     .pipe(plumber())
-    .pipe(minifyCSS())
     .pipe(concat(path.APP_CSS_MIN))
     .pipe(gulp.dest(path.DIST_CSS_DIR));
 });

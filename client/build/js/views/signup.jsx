@@ -15,6 +15,7 @@ var Signup = React.createClass({
   },
 
   setCanSubmit: function(){
+    //What is FormStore.isValid? 
     this.setState({ canSubmit: FormStore.isValid() });
     this.forceUpdate();
   },
@@ -27,6 +28,7 @@ var Signup = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
+    var inputs = document.querySelectorAll('input, textarea');
     if(this.state.canSubmit){
       AppDispatcher.dispatch({
         eventName: 'store-form-in-localStorage',

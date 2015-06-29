@@ -15,7 +15,6 @@ var Signup = React.createClass({
   },
 
   setCanSubmit: function(){
-    //What is FormStore.isValid? 
     this.setState({ canSubmit: FormStore.isValid() });
     this.forceUpdate();
   },

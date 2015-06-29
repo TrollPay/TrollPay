@@ -5,6 +5,7 @@ var PaymentStore = {
   },
   putOne: function(inputs) {
     // TODO: validate inputs, then store in localStorage;
+    // FIX: storeData is not defined. 
     inputs.forEach(function(input) {
       if (input.value) {
         this.storeData(input.name, input.value);

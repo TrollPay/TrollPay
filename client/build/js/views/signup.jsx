@@ -27,6 +27,7 @@ var Signup = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
+    var inputs = document.querySelectorAll('input, textarea');
     if(this.state.canSubmit){
       AppDispatcher.dispatch({
         eventName: 'store-form-in-localStorage',

@@ -76,10 +76,7 @@ gulp.task('dev-watch', function() {
 /* Build Task
  * Fetches, uglifies, and concatenates bower, app, and css components.
  */
-gulp.task('build', ['bower', 'vendor', 'app']);
-gulp.task('bower', function() {
-  return bower().pipe(gulp.dest(path.BOWER_COMPONENTS_DIR));
-});
+gulp.task('build', ['vendor', 'app']);
 gulp.task('vendor', function() {
   gulp.src(path.VENDOR_JS_SRC)
     .pipe(plumber())

@@ -13,7 +13,7 @@ var PaymentStore = {
   },
   putOne: function(inputs) {
     // TODO: validate inputs, then store in localStorage;
-    var inputs = Array.prototype.slice.call(inputs); 
+    var inputs = Array.prototype.slice.call(inputs);
     inputs.forEach(function(input) {
       if (input.value) {
         if (window.localStorage) {

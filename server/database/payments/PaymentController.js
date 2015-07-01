@@ -13,15 +13,6 @@ var Payment = Mongoose.model('Payment', PaymentSchema);
  */
 module.exports.addNewPayment = function(properties) {
 
-  // Attach defaults
-  // TODO: DO THIS CLIENT SIDE
-  _.extend(properties, {
-    isCancelled: false,
-    created_at: new Date().toISOString(),
-    balance: properties.total,
-    installments: []
-  });
-
   // create new Payment document
   var newPayment = Payment(properties);
 

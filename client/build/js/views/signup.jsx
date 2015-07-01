@@ -18,13 +18,7 @@ var Signup = React.createClass({
     this.setState({ canSubmit: FormStore.isValid() });
     this.forceUpdate();
   },
-
-  storeData: function(key, data) {
-    if (window.localStorage) {
-      localStorage.setItem(key, data);
-    }
-  },
-
+  
   handleSubmit: function(e) {
     e.preventDefault();
     var inputs = document.querySelectorAll('input, textarea');

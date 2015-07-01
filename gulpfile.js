@@ -7,7 +7,7 @@ var gulp = require('gulp'),
   plumber = require('gulp-plumber'),
   uglify = require('gulp-uglify'),
   concat = require('gulp-concat'),
-  foreman = require('gulp-foreman'),
+  // foreman = require('gulp-foreman'),
   react = require('gulp-react');
 
 /* ************
@@ -60,13 +60,8 @@ path.APP_CSS_MIN = 'app.min.css';
  * Watches the build directory for saved changes,
  * then automatically reruns the build task.
  */
-gulp.task('dev', ['build', 'foreman', 'dev-watch']);
-gulp.task('foreman', function() {
-  foreman({
-    procfile: 'Procfile.dev',
-    env: '.env'
-  });
-});
+gulp.task('dev', ['build', 'dev-watch']);
+
 gulp.task('dev-watch', function() {
   gulp.watch([
     path.BUILD_DIR + '/**/**/*'

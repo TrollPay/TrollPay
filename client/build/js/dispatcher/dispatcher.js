@@ -1,7 +1,8 @@
 AppDispatcher.register(function(payload) {
   switch (payload.eventName) {
     case 'new-payment':
-      PaymentStore.payments.push(payload.newPayment);
+      PaymentStore.payment = payload.newPayment;
+      PaymentStore.sendData();
       break;
 
     case 'get-user-credentials':

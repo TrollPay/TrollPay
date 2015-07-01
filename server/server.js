@@ -5,6 +5,7 @@ var path = require('path');
 // NPM Modules
 var express = require('express');
 var Mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 
 // Local Modules
 var routes = require('./routes.js');
@@ -28,12 +29,16 @@ var app = express();
 
 // Serve static assets automatically (eg: index.html, vendor assets, etc);
 app.use(express.static(path.join(__dirname, '../client')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // GET Requests
 app.get('/confirm', routes.confirm);
 
 // POST Requests
-app.post('/payment/create', routes.createPayment);
+  app.post('/payment/create', routes.createPayment);
 app.get('/venmo/fetchuser', routes.fetchUser);
 
 // Start the server

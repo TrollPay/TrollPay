@@ -25,8 +25,8 @@ module.exports.fetchUser = function(req, res) {
 }
 
 module.exports.createPayment = function(req, res) {
-  console.log(req.data);
-  //send out the 
+  //TODO: Store in database
+  console.log(req.body);
   res.send("Done");
 }
 

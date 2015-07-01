@@ -35,10 +35,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 // GET Requests
-app.get('/confirm', routes.confirm);
 
 // POST Requests
-  app.post('/payment/create', routes.createPayment);
+app.post('/payment/create', routes.createPayment);
 app.get('/venmo/fetchuser', routes.fetchUser);
 
 // Start the server

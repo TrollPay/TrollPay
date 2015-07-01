@@ -6,6 +6,7 @@ AppDispatcher.register(function(payload) {
       break;
 
     case 'get-user-credentials':
+      console.log('in the dispatcher getting creds')
       UserStore.getUser(payload.authData.code);
       UserStore.trigger('change');
       break;
@@ -16,6 +17,7 @@ AppDispatcher.register(function(payload) {
       break;
 
     case 'set-input-validation':
+      console.log('asdf');
       FormStore.setValidation(payload.target.label, payload.target.value);
       FormStore.trigger('validationSet');
       break;

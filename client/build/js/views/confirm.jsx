@@ -1,24 +1,24 @@
 var Confirm = React.createClass({
   getInitialState: function() {
     return {
-      picture: null,
+      picture: UserStore.sender.profile_picture_url,
       total : localStorage["total"],
-      note: localStorage["note"], 
+      note: localStorage["note"],
       recipient_email: localStorage["recipient_email"]
     }
   },
   componentDidMount: function() {
     UserStore.bind('change', this.credentialsRecieved);
-    AppDispatcher.dispatch({
-      eventName: 'get-user-credentials',
-      authData: {code: url.code}
-    });
   },
   credentialsRecieved: function() {
     this.forceUpdate();
   },
   handleSubmit: function(e) {
     e.preventDefault();
+    AppDispatcher.dispatch({
+      eventName: 'get-user-credentials',
+      authData: {'code': url.code}
+    });
     var data = {
       access_token: url.code,
       recipient_email: this.state.recipient_email,
@@ -48,7 +48,7 @@ var Confirm = React.createClass({
         <div>
           <h4>Recipient email</h4>
           <p>{this.state.recipient_email}</p>
-        </div> 
+        </div>
         <form onSubmit={this.handleSubmit}>
           <input type="submit" />
         </form>

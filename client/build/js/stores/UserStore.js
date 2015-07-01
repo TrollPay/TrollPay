@@ -13,9 +13,22 @@ var UserStore = {
   },
   getUser: function(code) {
     var url = 'https://api.venmo.com/v1/users/:user_id?access_token=' + code;
-    $.get(url, function(data) {
-      console.log(data);
-    });
+    // $.get(url, function(data) {
+    //   console.log(data);
+    // });
+    $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'json',
+      crossDomain: true,
+      success: function(data) {
+        console.log(data)
+      },
+      error: function() {
+        console.log('error');
+      },
+      beforeSend: setHeader
+    })
   },
   postData: function() {
     $.post('/payment/create', data)

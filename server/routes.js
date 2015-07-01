@@ -26,11 +26,20 @@ module.exports.fetchUser = function(req, res) {
 
 module.exports.createPayment = function(req, res) {
   //TODO: Store in database
-  console.log(req.body);
-  res.send("Done");
+  console.log("server received", req.body.payment);
+
+  PaymentController.addNewPayment(req.body.payment)
+    .then(function(payment) {
+      console.log("payment saved:", payment);
+      res.send("Done");
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
 }
 
 module.exports.confirm = function(req, res) {
+  console.log('on the confirm page');
   var url = Url.parse(req.url, true);
   var auth_code = url.query.code;
   if (!auth_code) {

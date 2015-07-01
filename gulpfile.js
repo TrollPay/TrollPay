@@ -19,6 +19,7 @@ var path = {};
 /* Directories */
 path.BOWER_COMPONENTS_DIR = './bower_components';
 path.BUILD_DIR = './client/build';
+path.SERVER_DIR = './server';
 path.DIST_JS_DIR = './client/dist/js';
 path.DIST_CSS_DIR = './client/dist/css';
 
@@ -64,7 +65,8 @@ gulp.task('dev', ['build', 'dev-watch']);
 
 gulp.task('dev-watch', function() {
   gulp.watch([
-    path.BUILD_DIR + '/**/**/*'
+    path.BUILD_DIR + '/**/**/*',
+    path.SERVER_DIR + '/**/**/*'
   ], ['build']);
 });
 

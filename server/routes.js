@@ -1,4 +1,7 @@
-var Url = require('url'); // https://nodejs.org/api/url.html
+//Default Modules
+var Url = require('url');
+var https = require('https');
+var needle = require('needle');
 
 // Local Modules
 var routes = require('./routes.js');
@@ -12,16 +15,34 @@ var app_id = process.env.APP_ID;
 
 module.exports.fetchUser = function(req, res) {
   //make the call to venmo api here and send back data on res
+  console.log("server recieved CODE: " + req.body.code);
+
   var data = {
-    client_id: app_id,
-    client_secret: api_secret,
-    code: req.code
+    "client_id": app_id,
+    "client_secret": api_secret,
+    "code": req.body.code
+  };
+
+  var getToken = function() {
+    var url = "https://api.venmo.com/v1/oauth/access_token";
+    needle.post(url, data,
+      function(err, resp, body) {
+        console.log(body.user);
+        //TODO: save body.access_token to your DB (this is the token that lasts up to 60 days)
+      });
   }
-  var url = 'https://api.venmo.com/v1/users/:user_id?access_token=' + code;
-  $.ajax({
-    url: url,
-    type: "POST",
-  })
+
+  getToken();
+
+  // var exchangeTokenUrl = 
+  // var venmoUserUrl = 'https://api.venmo.com/v1/me?access_token=' + req.body.code;
+
+  // https.get(venmoUserUrl, function(res) {
+  //   console.log("Got response: " + res);
+  // }).on('error', function(e) {
+  //   console.log("Got error: " + e.message);
+  // });
+
 }
 
 module.exports.createPayment = function(req, res) {

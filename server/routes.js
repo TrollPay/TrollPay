@@ -46,7 +46,13 @@ module.exports.fetchUser = function(req, res) {
 }
 
 module.exports.createPayment = function(req, res) {
-  //TODO: Store in database
+
+  // Lookup user or add new user to user database
+
+  // add new payment document to database
+
+  // send user to sucess page
+
   console.log("server received", req.body.payment);
 
   PaymentController.addNewPayment(req.body.payment)

@@ -3,4 +3,6 @@ bower_components/
 npm-debug.log
 client/dist/
 .env
+.env.json
 server/config.js
+.DS_Store

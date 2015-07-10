@@ -7,8 +7,10 @@ var gulp = require('gulp'),
   plumber = require('gulp-plumber'),
   uglify = require('gulp-uglify'),
   concat = require('gulp-concat'),
-  // foreman = require('gulp-foreman'),
-  react = require('gulp-react');
+  react = require('gulp-react'),
+  nodemon = require('gulp-nodemon'),
+  env = require('gulp-env');
+  
 
 /* ************
  * FILE PATHS *
@@ -61,13 +63,26 @@ path.APP_CSS_MIN = 'app.min.css';
  * Watches the build directory for saved changes,
  * then automatically reruns the build task.
  */
-gulp.task('dev', ['build', 'dev-watch']);
+gulp.task('dev', ['build', 'set-env', 'nodemon', 'dev-watch']);
 
 gulp.task('dev-watch', function() {
   gulp.watch([
     path.BUILD_DIR + '/**/**/*',
     path.SERVER_DIR + '/**/**/*'
   ], ['build']);
+});
+
+gulp.task('nodemon', function() {
+  nodemon({ script: './server/server.js'})
+    .on('restart', function() {
+      console.log('restarted!')
+    });
+});
+
+gulp.task('set-env', function() {
+  env({
+    file: '.env.json'
+  });
 });
 
 /* Build Task

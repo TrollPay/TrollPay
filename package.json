@@ -12,6 +12,7 @@
     "gulp": "^3.8.11",
     "gulp-bower": "0.0.10",
     "gulp-concat": "^2.5.2",
+    "gulp-env": "^0.2.0",
     "gulp-foreman": "^0.1.1",
     "gulp-nodemon": "^2.0.3",
     "gulp-plumber": "^1.0.0",

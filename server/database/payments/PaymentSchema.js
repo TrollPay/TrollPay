@@ -13,7 +13,7 @@ module.exports = new mongoose.Schema({
     email: String,
     phone: String,
     profile_picture_url: String,
-    ip_log: [String]
+    // ip_log: [String]
   },
   recipient_email: String,
   note: String,

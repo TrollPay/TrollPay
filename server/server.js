@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);
-app.post('/venmo/fetchuser', routes.fetchUser);
+// app.post('/venmo/fetchuser', routes.fetchUser);
 
 // Start the server
 var server = app.listen(port, function() {

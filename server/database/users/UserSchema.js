@@ -8,6 +8,7 @@ module.exports = new mongoose.Schema({
   first_name: String,
   last_name: String,
   display_name: String,
+  venmo_username: String,
   about: String,
   email: String,
   phone: String,

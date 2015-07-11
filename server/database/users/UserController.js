@@ -4,7 +4,7 @@ var userSchema = require('./UserSchema.js');
 
 var User = Mongoose.model('User', userSchema);
 
-module.exports.createNewUser = function(venmo, ip) {
+module.exports.createNewUser = function(venmo) {
   return new Promise(function(resolve, reject) {
     resolve(new User({
       venmo_id: venmo.user.id,
@@ -12,37 +12,42 @@ module.exports.createNewUser = function(venmo, ip) {
       refresh_token: venmo.refresh_token,
       first_name: venmo.user.first_name,
       last_name: venmo.user.last_name,
+      venmo_username: venmo.user.username,
       display_name: venmo.user.display_name,
       about: venmo.user.about,
       email: venmo.user.email,
       phone: venmo.user.phone,
       profile_picture_url: venmo.user.profile_picture_url,
-      venmo_join_date: venmo.user.data_joined,
-      ip_log: ip
+      venmo_join_date: venmo.user.date_joined
+        // ip_log: venmo.ip
     }));
   });
 };
 
-module.exports.getUser = function(id) {
+module.exports.getUser = function(user) {
   return new Promise(function(resolve, reject) {
     User.findOne({
-      venmo_id: id
+      venmo_id: user.venmo_id
     }, function(err, user) {
-      if (err) reject(err);
-      else if (user) {
-        console.log('User found');
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else if (user) {
+        console.log('getUser', true);
         resolve(user);
       } else {
-        console.log('User not found');
+        console.log('getUser', false);
         resolve(null);
       }
     });
   });
+
+
 };
 
 module.exports.insertNewUser = function(newUser) {
   return new Promise(function(resolve, reject) {
-    module.exports.getUser(newUser.venmo_id)
+    module.exports.getUser(newUser)
       .then(function(user) {
         if (!user) {
           newUser.save(function(err, saved) {
@@ -55,6 +60,7 @@ module.exports.insertNewUser = function(newUser) {
             }
           });
         } else {
+
           console.log('User already exists.');
           resolve(user);
         }

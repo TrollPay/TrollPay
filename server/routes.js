@@ -8,56 +8,48 @@ var routes = require('./routes.js');
 var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
 var UserUtils = require('./database/users/UserUtils.js');
+var Promise = require('bluebird');
 
 // Set environment variables
 var api_secret = process.env.API_SECRET;
 var app_id = process.env.APP_ID;
 
-module.exports.fetchUser = function(req, res) {
-  //make the call to venmo api here and send back data on res
-  console.log("server recieved CODE: " + req.body.code);
-
-  var data = {
-    "client_id": app_id,
-    "client_secret": api_secret,
-    "code": req.body.code
-  };
-
-  var getToken = function() {
+module.exports.fetchUser = function(code) {
+  return new Promise(function(resolve, reject) {
     var url = "https://api.venmo.com/v1/oauth/access_token";
+    var data = {
+      "client_id": app_id,
+      "client_secret": api_secret,
+      "code": code
+    };
     needle.post(url, data,
       function(err, resp, body) {
-        console.log(body.user);
-        //TODO: save body.access_token to your DB (this is the token that lasts up to 60 days)
+        if (err) {
+          reject(err);
+        } else {
+          resolve({
+            user: body.user,
+            access_token: body.access_token,
+            refresh_token: body.refresh_token
+              //ip: ''
+          });
+        }
       });
-  }
+  });
 
-  getToken();
-
-  // var exchangeTokenUrl = 
-  // var venmoUserUrl = 'https://api.venmo.com/v1/me?access_token=' + req.body.code;
-
-  // https.get(venmoUserUrl, function(res) {
-  //   console.log("Got response: " + res);
-  // }).on('error', function(e) {
-  //   console.log("Got error: " + e.message);
-  // });
-
-}
+};
 
 module.exports.createPayment = function(req, res) {
-  //TODO: Store in database
-  console.log("server received", req.body.payment);
-
-  PaymentController.addNewPayment(req.body.payment)
-    .then(function(payment) {
-      console.log("payment saved:", payment);
-      res.send("Done");
+  module.exports.fetchUser(req.body.code)
+    .then(UserController.createNewUser)
+    .then(UserController.insertNewUser)
+    .then(function(mongoUser) {
+      console.log('user created/updated', mongoUser);
     })
-    .catch(function(err) {
-      console.log(err);
+    .catch(function(error) {
+      console.log(error);
     });
-}
+};
 
 module.exports.confirm = function(req, res) {
   console.log('on the confirm page');

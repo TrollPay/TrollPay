@@ -2,7 +2,6 @@ var PaymentStore = {
   payment: null,
   //function to send data to server
   sendData: function() {
-    console.log('From the client: ' + JSON.stringify(this.payment));
     $.post('/payment/create', this.payment, function(data) {
       console.log(data);
     });

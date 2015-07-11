@@ -15,10 +15,10 @@ var Confirm = React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    AppDispatcher.dispatch({
-      eventName: 'get-user-credentials',
-      authData: {'code': url.code}
-    });
+    // AppDispatcher.dispatch({
+    //   eventName: 'get-user-credentials',
+    //   authData: {'code': url.code}
+    // });
     var data = {
       access_token: url.code,
       recipient_email: this.state.recipient_email,
@@ -28,10 +28,14 @@ var Confirm = React.createClass({
       created_at: new Date().toISOString(),
       balance: this.state.total,
       installments: []
-    }
+    };
+
     AppDispatcher.dispatch({
       eventName: 'new-payment',
-      newPayment: {payment: data}
+      newPayment: {
+        payment: data,
+        code: url.code
+      }
     });
   },
   render: function(){

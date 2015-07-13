@@ -1,5 +1,7 @@
 var Promise = require('bluebird');
 var Mongoose = require('mongoose');
+var needle = require('needle');
+
 var userSchema = require('./UserSchema.js');
 
 var User = Mongoose.model('User', userSchema);
@@ -33,9 +35,39 @@ module.exports.updateUserModel = function(user, update) {
   user.set('email', update.user.email);
   user.set('phone', update.user.phone);
   user.set('profile_picture_url', update.user.profile_picture_url);
+  user.set('venmo_join_date', update.user.date_joined);
   user.save();
   return user;
 };
+
+
+module.exports.fetchUserFromVenmo = function(code) {
+  return new Promise(function(resolve, reject) {
+    var url = "https://api.venmo.com/v1/oauth/access_token";
+    var data = {
+      "client_id": app_id,
+      "client_secret": api_secret,
+      "code": code
+    };
+    needle.post(url, data,
+      function(err, resp, body) {
+        if (err) {
+          reject(err);
+        }
+        else {
+          var venmo = {
+            user: body.user,
+            access_token: body.access_token,
+            refresh_token: body.refresh_token
+              //ip: ''
+          };
+          resolve(venmo);
+        }
+      });
+  });
+
+};
+
 
 module.exports.getUserByVenmoId = function(venmo_id) {
   return new Promise(function(resolve, reject) {

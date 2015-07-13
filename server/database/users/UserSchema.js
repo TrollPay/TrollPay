@@ -13,6 +13,6 @@ module.exports = new mongoose.Schema({
   email: String,
   phone: String,
   profile_picture_url: String,
-  date_joined: Date,
+  venmo_join_date: Date,
   ip_log: String
 });

@@ -6,23 +6,32 @@ var _ = require('underscore');
 var PaymentSchema = require('./PaymentSchema.js');
 var Payment = Mongoose.model('Payment', PaymentSchema);
 
-/**
- * addNewPayment creates a new Payment document and adds it to the collection.
- *
- * @param {Object} properties An object with all the properties on the schema, except the defaults.
- */
-module.exports.addNewPayment = function(properties) {
+module.exports.createNewPaymentModel = function(payment, sender_id) {
+  console.log('Creating a new payment:', sender_id);
+  var timestamp = new Date();
 
-  // create new Payment document
-  var newPayment = Payment(properties);
+  return new Payment({
+    sender_id: sender_id,
+    recipient_email: payment.recipient_email,
+    note: payment.note,
+    isCancelled: false,
+    created_at: timestamp.toISOString(),
+    total: payment.total,
+    balance: payment.total,
+    installments: []
+  });
+};
+
+module.exports.addNewPayment = function(payment) {
 
   return new Promise(function(resolve, reject) {
-    newPayment.save(function(err, payment) {
+    payment.save(function(err, payment) {
       if (err) {
-        console.log('Could not add new payment');
+        console.log('Could not add new payment', err);
         reject(err);
-      } else {
-        console.log('Payment added');
+      }
+      else {
+        console.log('Payment added', payment);
         resolve(payment);
       }
     });
@@ -30,18 +39,10 @@ module.exports.addNewPayment = function(properties) {
 
 };
 
-/**
- * processPayments calls the Venmo API on each Payment document in the system
- */
 module.exports.processPayments = function(callback) {
 
 };
 
-/**
- * cancelPayment voids a Payment by setting its isCancelled property to TRUE
- *
- * @param {Number} id Payment ID
- */
 module.exports.cancelPayment = function(id) {
   return new Promise(function(resolve, reject) {
     Payment.update({
@@ -53,10 +54,12 @@ module.exports.cancelPayment = function(id) {
         if (err) {
           console.log('Could not cancel payment');
           reject(err);
-        } else if (result.nModified < 1) {
+        }
+        else if (result.nModified < 1) {
           console.log('Payment is already cancelled');
           resolve(result);
-        } else {
+        }
+        else {
           console.log('Payment cancelled');
           resolve(result);
         }

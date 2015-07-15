@@ -6,7 +6,16 @@ var userSchema = require('./UserSchema.js');
 
 var User = Mongoose.model('User', userSchema);
 
-module.exports.createNewUserModel = function(venmo) {
+// Sets environment variables
+var api_secret = process.env.API_SECRET;
+var app_id = process.env.APP_ID;
+
+/*
+ * Creates a new user model document.
+ */
+module.exports.createNewUserModel = function(venmo, ip) {
+  console.log('Creating new user model:', venmo.user.id);
+  var join_date = new Date();
   return new User({
     venmo_id: venmo.user.id,
     access_token: venmo.access_token,
@@ -19,12 +28,19 @@ module.exports.createNewUserModel = function(venmo) {
     email: venmo.user.email,
     phone: venmo.user.phone,
     profile_picture_url: venmo.user.profile_picture_url,
-    venmo_join_date: venmo.user.date_joined
-      // ip_log: venmo.ip
+    venmo_join_date: venmo.user.date_joined,
+    join_date: join_date.toISOString(),
+    ip_log: ip
   });
 };
 
-module.exports.updateUserModel = function(user, update) {
+/*
+ * Returns an updated user model document.
+ */
+module.exports.updateUserModel = function(user, update, ip) {
+  console.log('Updating user model:', user.venmo_id);
+  var ip_log = user.get('ip_log');
+  ip_log.push(ip);
   user.set('access_token', update.access_token);
   user.set('refresh_token', update.refresh_token);
   user.set('first_name', update.user.first_name);
@@ -35,13 +51,17 @@ module.exports.updateUserModel = function(user, update) {
   user.set('email', update.user.email);
   user.set('phone', update.user.phone);
   user.set('profile_picture_url', update.user.profile_picture_url);
-  user.set('venmo_join_date', update.user.date_joined);
-  user.save();
+  user.set('ip_log', ip_log);
   return user;
 };
 
-
+/*
+ * fetchUserFromVenmo
+ * Resolves with an object containing a user object property,
+ * access token, and refresh token.
+ */
 module.exports.fetchUserFromVenmo = function(code) {
+  console.log('Fetching user from venmo', code);
   return new Promise(function(resolve, reject) {
     var url = "https://api.venmo.com/v1/oauth/access_token";
     var data = {
@@ -49,6 +69,7 @@ module.exports.fetchUserFromVenmo = function(code) {
       "client_secret": api_secret,
       "code": code
     };
+
     needle.post(url, data,
       function(err, resp, body) {
         if (err) {
@@ -59,17 +80,19 @@ module.exports.fetchUserFromVenmo = function(code) {
             user: body.user,
             access_token: body.access_token,
             refresh_token: body.refresh_token
-              //ip: ''
           };
           resolve(venmo);
         }
       });
   });
-
 };
 
-
+/*
+ * getUserByVenmoId
+ * Resolves with a user model or null if none is found.
+ */
 module.exports.getUserByVenmoId = function(venmo_id) {
+  console.log('Looking up user in database:', venmo_id);
   return new Promise(function(resolve, reject) {
     User.findOne({
       'venmo_id': venmo_id
@@ -90,22 +113,25 @@ module.exports.getUserByVenmoId = function(venmo_id) {
   });
 };
 
+/*
+ * upsertUser
+ * Resolves with the venmo id of the upserted user.
+ */
 module.exports.upsertUser = function(user) {
-  var upserted = user.toObject();
+  user = user.toObject();
   return new Promise(function(resolve, reject) {
     User.update({
-        venmo_id: upserted.venmo_id
-      }, upserted, {
+        venmo_id: user.venmo_id
+      },
+      user, {
         upsert: true
       },
       function(err, saved) {
         if (err) {
-          console.log('Could not upsert user');
           reject(err);
         }
         else {
-          console.log('User upserted');
-          resolve(saved);
+          resolve(user.venmo_id);
         }
       });
   });

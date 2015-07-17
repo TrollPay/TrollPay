@@ -7,7 +7,6 @@ var Promise = require('bluebird');
 var routes = require('./routes.js');
 var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
-var UserUtils = require('./database/users/UserUtils.js');
 
 module.exports.createPayment = function(req, res) {
 
@@ -26,6 +25,10 @@ module.exports.createPayment = function(req, res) {
     .then(_updateUserVenmoDetails)
     .then(_createPayment)
     .then(PaymentController.addNewPayment)
+    .then(PaymentController.processPayments)
+    .then(function(thing) {
+      console.log('processPayments', thing);
+    })
     .then(function() {
       res.send('Done');
     })

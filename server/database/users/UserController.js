@@ -11,6 +11,7 @@ var api_secret = process.env.API_SECRET;
 var app_id = process.env.APP_ID;
 
 /*
+ * createNewUserModel
  * Creates a new user model document.
  */
 module.exports.createNewUserModel = function(venmo, ip) {
@@ -35,6 +36,7 @@ module.exports.createNewUserModel = function(venmo, ip) {
 };
 
 /*
+ * updateUserModel
  * Returns an updated user model document.
  */
 module.exports.updateUserModel = function(user, update, ip) {
@@ -63,27 +65,26 @@ module.exports.updateUserModel = function(user, update, ip) {
 module.exports.fetchUserFromVenmo = function(code) {
   console.log('Fetching user from venmo', code);
   return new Promise(function(resolve, reject) {
-    var url = "https://api.venmo.com/v1/oauth/access_token";
+    var url = 'https://api.venmo.com/v1/oauth/access_token';
     var data = {
-      "client_id": app_id,
-      "client_secret": api_secret,
-      "code": code
+      'client_id': app_id,
+      'client_secret': api_secret,
+      'code': code
     };
 
-    needle.post(url, data,
-      function(err, resp, body) {
-        if (err) {
-          reject(err);
-        }
-        else {
-          var venmo = {
-            user: body.user,
-            access_token: body.access_token,
-            refresh_token: body.refresh_token
-          };
-          resolve(venmo);
-        }
-      });
+    needle.post(url, data, function(err, resp, body) {
+      if (err) {
+        reject(err);
+      }
+      else {
+        var venmo = {
+          user: body.user,
+          access_token: body.access_token,
+          refresh_token: body.refresh_token
+        };
+        resolve(venmo);
+      }
+    });
   });
 };
 

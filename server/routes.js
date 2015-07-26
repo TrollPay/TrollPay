@@ -7,6 +7,9 @@ var Promise = require('bluebird');
 var routes = require('./routes.js');
 var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
+var UserUtils = require('./database/users/UserUtils.js');
+
+var Utils = require('./utils.js');
 
 module.exports.createPayment = function(req, res) {
 
@@ -15,16 +18,15 @@ module.exports.createPayment = function(req, res) {
   var code = req.body.code;
 
   // logs the ip and reason
-  var ip = _makeIPLog(req.connection.remoteAddress, 'createPayment');
+  var ip = Utils.makeIPLog(req.connection.remoteAddress, 'createPayment');
 
   // stores the updated venmo credentials
   var venmo = null;
 
   UserController.fetchUserFromVenmo(code)
-    .then(_lookupUserByVenmo)
-    .then(_updateUserVenmoDetails)
-    .then(_createPayment)
-    .then(PaymentController.addNewPayment)
+    .then(lookupSenderByVenmoId)
+    .then(updateUserVenmoDetails)
+    .then(addNewPayment)
     .then(PaymentController.processPayments)
     .then(function(thing) {
       console.log('processPayments', thing);
@@ -43,31 +45,21 @@ module.exports.createPayment = function(req, res) {
       console.log(error);
     });
 
-  function _lookupUserByVenmo(venmo_data) {
+  function lookupSenderByVenmoId(venmo_data) {
     venmo = venmo_data;
-    return UserController.getUserByVenmoId(venmo.user.id);
+    return UserController.lookupSenderByVenmoId(venmo.user.id);
   }
 
-  function _updateUserVenmoDetails(user) {
+  function updateUserVenmoDetails(user) {
     if (!user)
-      user = UserController.createNewUserModel(venmo, ip);
+      user = UserUtils.createNewUserModel(venmo, ip);
     else
-      user = UserController.updateUserModel(user, venmo, ip);
+      user = UserUtils.updateUserModel(user, venmo, ip);
     return UserController.upsertUser(user);
   }
 
-  function _makeIPLog(ip, reason) {
-    var timestamp = new Date();
-    var log = {
-      timestamp: timestamp.toISOString(),
-      ip: ip,
-      reason: reason
-    };
-    return JSON.stringify(log);
-  }
-
-  function _createPayment(sender_id) {
-    return PaymentController.createNewPaymentModel(payment, sender_id);
+  function addNewPayment(sender_id) {
+    return PaymentController.addNewPayment(payment, sender_id);
   }
 
 };

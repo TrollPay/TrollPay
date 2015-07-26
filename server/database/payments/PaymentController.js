@@ -2,83 +2,75 @@ var Promise = require('bluebird');
 var Mongoose = require('mongoose');
 var _ = require('underscore');
 var needle = require('needle');
-
-// The Payment model
-var PaymentSchema = require('./PaymentSchema.js');
-var Payment = Mongoose.model('Payment', PaymentSchema);
+var nodemailer = require('nodemailer');
 
 var UserController = require('../users/UserController.js');
 
-/*
- * createNewPaymentModel
- * Creates a new payment model document.
- */
-module.exports.createNewPaymentModel = function(payment, sender_id) {
-  console.log('Creating a new payment:', sender_id);
-  var timestamp = new Date();
+var PaymentSchema = require('./PaymentSchema.js');
+var Payment = Mongoose.model('Payment', PaymentSchema);
+var Utils = require('./PaymentUtils.js');
 
-  return new Payment({
-    sender_id: sender_id,
-    recipient_email: payment.recipient_email,
-    note: payment.note,
-    isCancelled: false,
-    created_at: timestamp.toISOString(),
-    total: payment.total,
-    balance: payment.total,
-    installments: []
-  });
-};
+var VENMO = require('../../endpoints.js');
 
 /*
  * addNewPayment
  * Resolves with the payment document that was inserted into the database.
  */
-module.exports.addNewPayment = function(payment) {
-
+module.exports.addNewPayment = function(venmo, sender_id) {
+  var payment = Utils.createNewPaymentModel(venmo, sender_id);
   return new Promise(function(resolve, reject) {
-    payment.save(function(err, payment) {
+    payment.save(cb);
+    function cb(err, payment) {
       if (err) {
         console.log('Could not add new payment', err);
         reject(err);
-      }
-      else {
+      } else {
         console.log('Payment added', payment);
         resolve(payment);
       }
-    });
+    }
   });
-
 };
 
 /*
  * processPayments
- *
+ * Calls processPayment on each payment in the database.
  */
 module.exports.processPayments = function() {
   return new Promise(function(resolve, reject) {
-    Payment.find({}, function(err, payments) {
-      if (err) {
-        reject(err);
-      }
+    Payment.find({}, cb);
+    function cb(err, payments) {
+      if (err) { reject(err); }
       else {
-        var promises = payments.map(_processPayment);
-        resolve(Promise.all(promises));
-      }
-    });
+        payments = payments.filter(filter);
+        payments = payments.map(module.exports.processPayment);
+        resolve(Promise.all(payments));
+       }
+    }
+    function filter(payment){
+      return !(payment.get('cancelled') ||
+        payment.get('untrolled') ||
+        payment.get('trollTolled'));
+    }
   });
+};
 
-  function _processPayment(payment) {
-    return UserController.getUserByVenmoId(payment.sender_id)
-      .then(function(user) {
-        return {
-          'access_token': user.access_token,
-          'email': payment.recipient_email,
-          'note': payment.note,
-          'amount': 1
-        };
-      })
-      .then(module.exports.sendPayment)
-      .then(module.exports.updatePayment);
+/*
+ * processPayment
+ * Sends money through Venmo then updates the payment document.
+ */
+module.exports.processPayment = function(payment) {
+  return UserController.lookupSenderByVenmoId(payment.sender_id)
+    .then(makePaymentStub)
+  //  .then(module.exports.sendPayment)
+  //  .then(updatePayment);
+
+  function makePaymentStub(user){
+    return Utils.makePaymentStub(user, payment);
+  }
+
+  function updatePayment(body) {
+    return Utils.updatePayment(payment, body);
   }
 };
 
@@ -86,42 +78,38 @@ module.exports.processPayments = function() {
  * sendPayment
  * Resolves with the response body from sending payment.
  */
-module.exports.sendPayment = function(properties) {
-  console.log('Sending payment to:', properties.email);
-  var url = 'https://api.venmo.com/v1/payments';
+module.exports.sendPayment = function(stub) {
+  console.log('Sending payment to:', stub.email);
   return new Promise(function(resolve, reject) {
-    needle.post(url, properties, function(err, resp, body) {
-      if (err) {
-        reject(err);
-      }
-      else {
-        console.log('payment body:', body);
-        resolve(body);
-      }
-    });
+    if(!stub){ reject(null); }
+    else { needle.post(VENMO.PAYMENTS, stub, cb); }
+    function cb(err, resp, body) {
+      console.log('payment body:', body);
+      if (err) { reject(err); }
+      else { resolve(body); }
+    }
   });
 };
 
 module.exports.cancelPayment = function(id) {
+  var timestamp = new Date();
   return new Promise(function(resolve, reject) {
-    Payment.update({
-        '_id': id
-      }, {
-        'isCancelled': true
-      },
-      function(err, result) {
-        if (err) {
-          console.log('Could not cancel payment');
-          reject(err);
-        }
-        else if (result.nModified < 1) {
-          console.log('Payment is already cancelled');
-          resolve(result);
-        }
-        else {
-          console.log('Payment cancelled');
-          resolve(result);
-        }
-      });
+    Payment.update(
+      { '_id': id },
+      { 'isCancelled': timestamp.toISOString(),
+        'balance': 0 },
+      cb);
+    function cb(err, result){
+      if (err) {
+        console.log('Could not cancel payment');
+        reject(err);
+      } else if (result.nModified < 1) {
+        console.log('Payment is already cancelled');
+        resolve(result);
+      } else {
+        console.log('Payment cancelled');
+        resolve(result);
+      }
+    }
   });
 };

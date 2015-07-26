@@ -5,7 +5,6 @@ var Confirm = React.createClass({
       total : localStorage["total"],
       note: localStorage["note"],
       recipient_email: localStorage["recipient_email"],
-      submitted: 'none',
       code: localStorage["code"]
     }
   },
@@ -15,14 +14,18 @@ var Confirm = React.createClass({
     }
     window.location.replace("/#/confirm");
   },
-  credentialsRecieved: function() {
-    this.forceUpdate();
+  toggleForm: function() {
+    $('#progressBar').show();
+    setInterval(function() {
+      var progress = $('#progressBar > div').attr('aria-valuenow');
+      var adjust = progress > 100 ? 100 : progress;
+      $('#progressBar').attr('aria-valuenow', adjust);
+    }, 100)
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    this.setState({submitted: 'show'});
+    this.toggleForm();
     var data = {
-      access_token: url.code,
       recipient_email: this.state.recipient_email,
       total: this.state.total,
       note: this.state.note,
@@ -31,28 +34,30 @@ var Confirm = React.createClass({
       balance: this.state.total,
       installments: []
     };
-
     AppDispatcher.dispatch({
       eventName: 'new-payment',
       newPayment: {
         payment: data,
-        code: url.code
+        code: localStorage.code
       }
     });
+    console.log(data);
   },
   render: function(){
-    var styles = {
+    var style = {
+      show: {
+        display: 'none'
+      },
       barWidth: {
         width: '45%'
-      },
-      show: {
-        display: this.state.submitted
       }
     }
     return (
       <div>
-        <div className="progress" style={styles.show}>
-          <div className="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style={styles.barWidth}>
+        <div id="progressBar" className="progress" style={style.show}>
+          <div className="progress-bar progress-bar-striped active" 
+          role="progressbar" aria-valuenow="45" aria-valuemin="0" 
+          aria-valuemax="100" style={style.barWidth}>
             <span className="sr-only">45% Complete</span>
           </div>
         </div>

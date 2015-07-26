@@ -5,11 +5,17 @@ var Promise = require('bluebird');
 
 // Local Modules
 var routes = require('./routes.js');
+var EmailController = require('./database/emails/EmailController.js');
 var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
 var UserUtils = require('./database/users/UserUtils.js');
 
 var Utils = require('./utils.js');
+
+module.exports.testEmail = function(req, res){
+  EmailController.sendWelcomeEmails('dannydelott@gmail.com','poppin3000@gmail.com');
+  res.send('Email sent!');
+};
 
 module.exports.createPayment = function(req, res) {
 
@@ -27,20 +33,24 @@ module.exports.createPayment = function(req, res) {
     .then(lookupSenderByVenmoId)
     .then(updateUserVenmoDetails)
     .then(addNewPayment)
-    .then(PaymentController.processPayments)
-    .then(function(thing) {
-      console.log('processPayments', thing);
+    .then(sendEmails)
+    .then(function(){
+      res.send('Done');
     })
-    .then(function(payment) {
-      var data = {
-        profile_pic: venmo.user.profile_picture_url,
-        first_name: venmo.user.first_name,
-        last_name: venmo.user.last_name,
-        email: venmo.user.email,
-        payment_total: payment.total
-      }
-      res.send(data);
-    })
+    // .then(PaymentController.processPayments)
+    // .then(function(thing) {
+    //   console.log('processPayments', thing);
+    // })
+    // .then(function(payment) {
+    //   var data = {
+    //     profile_pic: venmo.user.profile_picture_url,
+    //     first_name: venmo.user.first_name,
+    //     last_name: venmo.user.last_name,
+    //     email: venmo.user.email,
+    //     payment_total: payment.total
+    //   }
+    //   res.send(data);
+    // })
     .catch(function(error) {
       console.log(error);
     });
@@ -60,6 +70,12 @@ module.exports.createPayment = function(req, res) {
 
   function addNewPayment(sender_id) {
     return PaymentController.addNewPayment(payment, sender_id);
+  }
+
+  function sendEmails(payment){
+    var sender = venmo.user.email;
+    var recipient = payment.get('recipient_email');
+    return EmailController.sendWelcomeEmails(sender, recipient);
   }
 
 };

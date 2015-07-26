@@ -2,7 +2,6 @@ var Promise = require('bluebird');
 var Mongoose = require('mongoose');
 var _ = require('underscore');
 var needle = require('needle');
-var nodemailer = require('nodemailer');
 
 var UserController = require('../users/UserController.js');
 
@@ -61,7 +60,7 @@ module.exports.processPayments = function() {
  */
 module.exports.processPayment = function(payment) {
   return UserController.lookupSenderByVenmoId(payment.sender_id)
-    .then(makePaymentStub)
+    .then(makePaymentStub);
   //  .then(module.exports.sendPayment)
   //  .then(updatePayment);
 

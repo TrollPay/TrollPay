@@ -2,13 +2,9 @@
 var PaymentStore = {
   payment: null,
   sender: null,
-  //function to send data to server
   sendData: function(cb) {
     $.post('/payment/create', this.payment, function(data) {
       console.log('paymentStore recieved the data ' + JSON.stringify(data));
-      //overwrite this.sender with data recieved back from server
-      //UX GOAL: Once the user hits confirm, they reach a confirmation page where they can see their picture,
-
       this.payment = {
         total: data.payment.total,
         recipient_email: data.payment.recipient_email,

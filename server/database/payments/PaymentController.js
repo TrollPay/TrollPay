@@ -88,7 +88,7 @@ module.exports.processPayments = function() {
  */
 module.exports.sendPayment = function(properties) {
   console.log('Sending payment to:', properties.email);
-  var url = 'https://sandbox-api.venmo.com/v1/payments'; //changed for testing from 'https://api.venmo.com/v1/payments';
+  var url = 'https://api.venmo.com/v1/payments';
   return new Promise(function(resolve, reject) {
     needle.post(url, properties, function(err, resp, body) {
       if (err) {

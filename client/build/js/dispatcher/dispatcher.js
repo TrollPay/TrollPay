@@ -5,11 +5,6 @@ AppDispatcher.register(function(payload) {
       PaymentStore.sendData(function() { PaymentStore.trigger('confirmed-payment') })
       break;
 
-    // case 'get-user-credentials':
-    //   UserStore.getUser(payload.authData.code);
-    //   UserStore.trigger('change');
-    //   break;
-
     case 'store-form-in-localStorage':
       PaymentStore.putOne(payload.formData.inputs);
       PaymentStore.trigger('stored');

@@ -2,12 +2,7 @@ AppDispatcher.register(function(payload) {
   switch (payload.eventName) {
     case 'new-payment':
       PaymentStore.payment = payload.newPayment;
-      PaymentStore.sendData();
-      break;
-
-    case 'get-user-credentials':
-      UserStore.getUser(payload.authData.code);
-      UserStore.trigger('change');
+      PaymentStore.sendData(function() { PaymentStore.trigger('confirmed-payment') })
       break;
 
     case 'store-form-in-localStorage':

@@ -29,8 +29,15 @@ module.exports.createPayment = function(req, res) {
     .then(function(thing) {
       console.log('processPayments', thing);
     })
-    .then(function() {
-      res.send('Done');
+    .then(function(payment) {
+      var data = {
+        profile_pic: venmo.user.profile_picture_url,
+        first_name: venmo.user.first_name,
+        last_name: venmo.user.last_name,
+        email: venmo.user.email,
+        payment_total: payment.total
+      }
+      res.send(data);
     })
     .catch(function(error) {
       console.log(error);

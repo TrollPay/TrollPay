@@ -1,5 +1,7 @@
+var VENMO = require('../../endpoints.js');
+
 var Promise = require('bluebird');
-var Mongoose = require('mongoose');
+var Mongoose = Promise.promisifyAll(require('mongoose'));
 var _ = require('underscore');
 var needle = require('needle');
 
@@ -7,28 +9,18 @@ var UserController = require('../users/UserController.js');
 
 var PaymentSchema = require('./PaymentSchema.js');
 var Payment = Mongoose.model('Payment', PaymentSchema);
-var Utils = require('./PaymentUtils.js');
 
-var VENMO = require('../../endpoints.js');
+var Utils = require('./PaymentUtils.js');
 
 /*
  * addNewPayment
  * Resolves with the payment document that was inserted into the database.
  */
 module.exports.addNewPayment = function(venmo, sender_id) {
-  var payment = Utils.createNewPaymentModel(venmo, sender_id);
-  return new Promise(function(resolve, reject) {
-    payment.save(cb);
-    function cb(err, payment) {
-      if (err) {
-        console.log('Could not add new payment', err);
-        reject(err);
-      } else {
-        console.log('Payment added', payment);
-        resolve(payment);
-      }
-    }
-  });
+  return Utils.createNewPaymentModel(venmo, sender_id).then(savePayment);
+  function savePayment(model){
+    return model.saveAsync().then(function(result){ return model; });
+  }
 };
 
 /*

@@ -7,3 +7,4 @@ client/dist/
 .env.json
 server/config.js
 .DS_Store
+HashGenerator.js

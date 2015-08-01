@@ -10,11 +10,18 @@ var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
 var UserUtils = require('./database/users/UserUtils.js');
 
+var HashGenerator = require('./database/payments/HashGenerator.js');
 var Utils = require('./utils.js');
 
-module.exports.testEmail = function(req, res){
-  EmailController.sendWelcomeEmails('dannydelott@gmail.com','poppin3000@gmail.com');
-  res.send('Email sent!');
+module.exports.cancelPayment = function(req, res){
+};
+
+module.exports.test = function(req, res){
+  HashGenerator.generateHashes('id', 12)
+  .then(function(hashes){
+    console.log(hashes);
+    res.send('d');
+  });
 };
 
 module.exports.createPayment = function(req, res) {
@@ -29,9 +36,9 @@ module.exports.createPayment = function(req, res) {
   // stores the updated venmo credentials
   var venmo = null;
 
-  UserController.fetchUserFromVenmo(code)
+  tradeCodeForVenmoData(code)
     .then(lookupSenderByVenmoId)
-    .then(updateUserVenmoDetails)
+    .then(storeUserVenmoData)
     .then(addNewPayment)
     .then(sendEmails)
     .then(function(){
@@ -55,12 +62,16 @@ module.exports.createPayment = function(req, res) {
       console.log(error);
     });
 
+  function tradeCodeForVenmoData(code){
+    return UserController.fetchUserFromVenmo(code);
+  }
+
   function lookupSenderByVenmoId(venmo_data) {
     venmo = venmo_data;
     return UserController.lookupSenderByVenmoId(venmo.user.id);
   }
 
-  function updateUserVenmoDetails(user) {
+  function storeUserVenmoData(user) {
     if (!user)
       user = UserUtils.createNewUserModel(venmo, ip);
     else

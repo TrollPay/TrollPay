@@ -5,6 +5,7 @@
   "main": "gulpfile.js",
   "scripts": {},
   "dependencies": {
+    "bcrypt": "^0.8.4",
     "bluebird": "^2.9.27",
     "body-parser": "^1.13.1",
     "bower": "^1.4.1",

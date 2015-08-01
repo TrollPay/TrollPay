@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // GET Requests
-app.get('/testemail', routes.testEmail);
+app.get('/test', routes.test);
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);

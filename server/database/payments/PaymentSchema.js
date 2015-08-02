@@ -4,14 +4,18 @@ module.exports = new mongoose.Schema({
 
   id: mongoose.Schema.Types.ObjectId,
   sender_id: String,
+
   recipient_email: String,
   note: String,
-  created_at: Date,
+  created_at: String,
   total: Number,
   balance: Number,
-  installments: [String],
-  cancelled: String, // false or 'timestamp'
-  untrolled: String,  // false or 'timestamp, amount untrolled'
-  trollTolled: String, // false or 'timestamp, toll payed'
+
+  claimed: [String],
+  claims: [String],
+
+  cancel: String, // cancel hash or timestamp of action
+  untroll: String,
+  troll_toll: String
 
 });

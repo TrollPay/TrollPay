@@ -10,12 +10,28 @@ var PaymentController = require('./database/payments/PaymentController.js');
 var UserController = require('./database/users/UserController.js');
 var UserUtils = require('./database/users/UserUtils.js');
 
+var HashGenerator = require('./database/payments/HashGenerator.js');
 var Utils = require('./utils.js');
 
-module.exports.testEmail = function(req, res){
-  EmailController.sendWelcomeEmails('dannydelott@gmail.com','poppin3000@gmail.com');
-  res.send('Email sent!');
+// TODO: Generalize as updatePayment, to take in key and lookup
+module.exports.cancelPayment = function(req, res){
+  var lookup = HashGenerator.decodeBase64(req.params.lookup);
+  var hash = lookup[0], id = lookup[1];
+
+  HashGenerator.checkHash('CANCEL', id, hash)
+  .then(processCancellation)
+  .then(sendResponse);
+
+  function processCancellation(valid){
+    return valid ? PaymentController.cancelPayment(id) : null;
+  }
+  function sendResponse(payment){
+    if(!payment){ res.send('404'); }
+    else{ res.send(payment); }
+  }
 };
+
+module.exports.test = function(req, res){};
 
 module.exports.createPayment = function(req, res) {
 
@@ -29,11 +45,11 @@ module.exports.createPayment = function(req, res) {
   // stores the updated venmo credentials
   var venmo = null;
 
-  UserController.fetchUserFromVenmo(code)
+  tradeCodeForVenmoData(code)
     .then(lookupSenderByVenmoId)
-    .then(updateUserVenmoDetails)
+    .then(storeUserVenmoData)
     .then(addNewPayment)
-    .then(sendEmails)
+    //.then(sendEmails)
     .then(function(){
       res.send('Done');
     })
@@ -55,12 +71,16 @@ module.exports.createPayment = function(req, res) {
       console.log(error);
     });
 
+  function tradeCodeForVenmoData(code){
+    return UserController.fetchUserFromVenmo(code);
+  }
+
   function lookupSenderByVenmoId(venmo_data) {
     venmo = venmo_data;
     return UserController.lookupSenderByVenmoId(venmo.user.id);
   }
 
-  function updateUserVenmoDetails(user) {
+  function storeUserVenmoData(user) {
     if (!user)
       user = UserUtils.createNewUserModel(venmo, ip);
     else

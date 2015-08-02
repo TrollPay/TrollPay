@@ -16,6 +16,6 @@ module.exports = new mongoose.Schema({
 
   cancel: String, // cancel hash or timestamp of action
   untroll: String,
-  troll_toll: String
+  trolltoll: String
 
 });

@@ -34,8 +34,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-// GET Requests
+// TEST
 app.get('/test', routes.test);
+
+// GET Requests
+app.get('/cancel/:lookup', routes.cancelPayment);
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);

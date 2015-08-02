@@ -13,25 +13,31 @@ var UserUtils = require('./database/users/UserUtils.js');
 var HashGenerator = require('./database/payments/HashGenerator.js');
 var Utils = require('./utils.js');
 
-// TODO: Generalize as updatePayment, to take in key and lookup
-module.exports.cancelPayment = function(req, res){
+module.exports.updatePayment = function(req, res){
+  var key = req.params.key.toUpperCase();
   var lookup = HashGenerator.decodeBase64(req.params.lookup);
-  var hash = lookup[0], id = lookup[1];
+  var id = lookup[0];
+  var hash = lookup[1];
 
-  HashGenerator.checkHash('CANCEL', id, hash)
-  .then(processCancellation)
+  HashGenerator.checkHash(key, id, hash)
+  .then(processUpdate)
   .then(sendResponse);
 
-  function processCancellation(valid){
-    return valid ? PaymentController.cancelPayment(id) : null;
+  function processUpdate(valid){
+    if(valid && key === 'CANCEL'){
+      return PaymentController.cancelPayment(id);
+    }
+    else if(valid && key === 'CLAIM'){
+      return PaymentController.claimPayment(id, hash);
+    }
+    else{ return null; }
   }
+
   function sendResponse(payment){
     if(!payment){ res.send('404'); }
     else{ res.send(payment); }
   }
 };
-
-module.exports.test = function(req, res){};
 
 module.exports.getwebhook = function(req, res) {
   res.send('GET to /venmowh received');
@@ -56,25 +62,11 @@ module.exports.createPayment = function(req, res) {
   tradeCodeForVenmoData(code)
     .then(lookupSenderByVenmoId)
     .then(storeUserVenmoData)
-    .then(addNewPayment)
+    .then(addPayment)
     //.then(sendEmails)
     .then(function(){
       res.send('Done');
     })
-    // .then(PaymentController.processPayments)
-    // .then(function(thing) {
-    //   console.log('processPayments', thing);
-    // })
-    // .then(function(payment) {
-    //   var data = {
-    //     profile_pic: venmo.user.profile_picture_url,
-    //     first_name: venmo.user.first_name,
-    //     last_name: venmo.user.last_name,
-    //     email: venmo.user.email,
-    //     payment_total: payment.total
-    //   }
-    //   res.send(data);
-    // })
     .catch(function(error) {
       console.log(error);
     });
@@ -96,8 +88,8 @@ module.exports.createPayment = function(req, res) {
     return UserController.upsertUser(user);
   }
 
-  function addNewPayment(sender_id) {
-    return PaymentController.addNewPayment(payment, sender_id);
+  function addPayment(sender_id) {
+    return PaymentController.addPayment(payment, sender_id);
   }
 
   function sendEmails(payment){

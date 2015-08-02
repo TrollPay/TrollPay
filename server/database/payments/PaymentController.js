@@ -1,24 +1,23 @@
-var VENMO = require('../../endpoints.js');
 var REGEX = require('../../utils.js').REGEX;
 
 var Promise = require('bluebird');
 var Mongoose = Promise.promisifyAll(require('mongoose'));
 var _ = require('underscore');
-var needle = require('needle');
 
 var UserController = require('../users/UserController.js');
 
 var PaymentSchema = require('./PaymentSchema.js');
 var Payment = Mongoose.model('Payment', PaymentSchema);
 
-var Utils = require('./PaymentUtils.js');
+var PaymentUtils = require('./PaymentUtils.js');
+var PaymentStubGenerator = require('./PaymentStubGenerator.js');
 
 /*
- * addNewPayment
+ * addPayment
  * Resolves with the payment document that was inserted into the database.
  */
-module.exports.addNewPayment = function(venmo, sender_id) {
-  return Utils.createNewPaymentModel(venmo, sender_id).then(savePayment);
+module.exports.addPayment = function(venmo, sender_id) {
+  return PaymentUtils.createNewPaymentModel(venmo, sender_id).then(savePayment);
   function savePayment(model){
     return model.saveAsync().then(function(result){ return model; });
   }
@@ -40,7 +39,7 @@ module.exports.cancelPayment = function(id) {
   }
   function canCancel(){
     var cancel = payment.get('cancel');
-    return cancel ? REGEX.ISO_DATE.test(payment.get('cancel')) : false;
+    return cancel ? REGEX.ISO_DATE.test(cancel) : false;
   }
   function processCancellation(cancelled){
     if(cancelled){ return payment; }
@@ -53,6 +52,57 @@ module.exports.cancelPayment = function(id) {
       payment.set('troll_toll', null);
       return payment.saveAsync().then(function(result){ return payment; });
     }
+  }
+};
+
+/*
+ * claimPayment
+ * Processes a claim and resolves with the updated payment document.
+ */
+module.exports.claimPayment = function(id, hash){
+  var payment = null;
+
+  return getPayment(id)
+    .then(canClaim)
+    .then(processClaim);
+
+  function getPayment(id){
+    console.log('getting payment claim:', hash);
+    return Payment.findByIdAsync(id).then(function(doc){ payment = doc; });
+  }
+
+  function canClaim(){
+    var claims = payment.get('claims');
+    if(!claims){ return false; }
+    if(claims.indexOf(hash) === -1) { return false; }
+
+    return true;
+  }
+
+  function processClaim(claimable){
+    if(!claimable){ console.log('not claimable'); return payment; }
+    else{
+      var timestamp = new Date();
+      return processPayment(payment, hash);
+    }
+  }};
+
+/*
+ * processPayment
+ * Sends money through Venmo then updates the payment document.
+ */
+var processPayment = function(payment, hash) {
+  return UserController.lookupSenderByVenmoId(payment.sender_id)
+    .then(makePaymentStub)
+    .then(PaymentUtils.sendPayment)
+    .then(updatePayment);
+
+  function makePaymentStub(user){
+    return PaymentStubGenerator.makeStub(user, payment);
+  }
+
+  function updatePayment(body) {
+    return PaymentUtils.updatePayment(payment, body, hash);
   }
 };
 
@@ -79,38 +129,3 @@ module.exports.processPayments = function() {
   });
 };
 
-/*
- * processPayment
- * Sends money through Venmo then updates the payment document.
- */
-module.exports.processPayment = function(payment) {
-  return UserController.lookupSenderByVenmoId(payment.sender_id)
-    .then(makePaymentStub);
-  //  .then(module.exports.sendPayment)
-  //  .then(updatePayment);
-
-  function makePaymentStub(user){
-    return Utils.makePaymentStub(user, payment);
-  }
-
-  function updatePayment(body) {
-    return Utils.updatePayment(payment, body);
-  }
-};
-
-/*
- * sendPayment
- * Resolves with the response body from sending payment.
- */
-module.exports.sendPayment = function(stub) {
-  console.log('Sending payment to:', stub.email);
-  return new Promise(function(resolve, reject) {
-    if(!stub){ reject(null); }
-    else { needle.post(VENMO.PAYMENTS, stub, cb); }
-    function cb(err, resp, body) {
-      console.log('payment body:', body);
-      if (err) { reject(err); }
-      else { resolve(body); }
-    }
-  });
-};

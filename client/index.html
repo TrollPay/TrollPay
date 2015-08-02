@@ -21,7 +21,7 @@
 </head>
 
 <body>
-  <div class="container">
+  <div id="hero" class="container">
     <div class="header clearfix">
       <nav>
         <ul class="nav nav-pills pull-right">
@@ -30,7 +30,53 @@
       </nav>
       <h3 class="text-muted">TrollPay</h3>
     </div>
-    <div id="app"></div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="feed-container">
+        <img id="iphone" src="./assets/iphonemock.png" alt="Iphone" />
+          <div class="iphone-feed">
+            <ul class="feed">
+
+              <!-- Payment feed section  -->
+
+              <li class="payment">
+                <div class="payment-top">
+                  <img class="circular" src="./assets/profilepic.jpg" />
+                  <div class="payment-text">
+                    <p>
+                      <span class="names">Kendall F</span> paid 
+                      <span class="names">Mary Margaret H</span>
+                      <span class="ago">1m</span>
+                    </p>
+                    <p>
+                      Go carts 
+                    </p>
+                    <p>
+                      <span class="like">Like</span>
+                      <span class="comment">Comment</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+
+              <!-- End Payment feed section -->
+
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div id="app"></div>
+        <div id="pitch" class="text-center">
+          <h3>How TrollPay Works</h3>
+          <ul style="list-style-type: none;">
+            <li>Asymmetrical tilde trust fund art party, DIY slow-carb Williamsburg stumptown.</li>
+            <li>Cred freegan narwhal listicle, Wes Anderson yr pug semiotics single-origin</li>
+            <li>Normcore wayfarers mumblecore sriracha.Salvia blog meditation, post-ironic vegan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <footer class="footer">
       <p>&copy; Trollpay 2015</p>
     </footer>

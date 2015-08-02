@@ -1,3 +1,5 @@
+var ACTION = require('./utils.js').ACTION;
+
 // Default Modules
 var Url = require('url');
 var https = require('https');
@@ -24,11 +26,14 @@ module.exports.updatePayment = function(req, res){
   .then(sendResponse);
 
   function processUpdate(valid){
-    if(valid && key === 'CANCEL'){
+    if(valid && key === ACTION.CANCEL){
       return PaymentController.cancelPayment(id);
     }
-    else if(valid && key === 'CLAIM'){
+    else if(valid && key === ACTION.CLAIM){
       return PaymentController.claimPayment(id, hash);
+    }
+    else if(valid && key === ACTION.UNTROLL){
+      return PaymentController.untrollPayment(id, hash);
     }
     else{ return null; }
   }

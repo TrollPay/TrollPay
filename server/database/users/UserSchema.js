@@ -11,8 +11,8 @@ module.exports = new mongoose.Schema({
   display_name: String,
   venmo_username: String,
   profile_picture_url: String,
-  join_date: Date,
-  venmo_join_date: Date,
+  join_date: String,
+  venmo_join_date: String,
   access_token: String,
   refresh_token: String,
   ip_log: [String]

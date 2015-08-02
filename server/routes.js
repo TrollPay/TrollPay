@@ -33,6 +33,14 @@ module.exports.cancelPayment = function(req, res){
 
 module.exports.test = function(req, res){};
 
+module.exports.getwebhook = function(req, res) {
+  res.send('GET to /venmowh received');
+};
+
+module.exports.postwebhook = function(req, res) {
+  res.send('POST to /venmowh received');
+};
+
 module.exports.createPayment = function(req, res) {
 
   // Parses values from request body

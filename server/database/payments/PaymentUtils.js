@@ -17,7 +17,7 @@ var noteTemplate = _.template(
  * Creates a new payment model document.
  */
 module.exports.createNewPaymentModel = function(payment, sender_id) {
-  console.log('Creating a new payment:', sender_id);
+  console.log('Sender ID:', sender_id, 'is creating a new payment');
   var timestamp = new Date();
   var numClaims = Math.floor(payment.total);
   var model = new Payment({
@@ -45,6 +45,12 @@ module.exports.createNewPaymentModel = function(payment, sender_id) {
     model.set('cancel', hashes.cancel);
     model.set('untroll', hashes.untroll);
     model.set('troll_toll', hashes.trolltoll);
+
+    console.log('localhost:3000/cancel/' + HashGenerator.encodeBase64(id, hashes.cancel));
+    console.log('localhost:3000/claim/' + HashGenerator.encodeBase64(id, hashes.claim));
+    console.log('localhost:3000/untroll/' + HashGenerator.encodeBase64(id, hashes.untroll));
+    console.log('localhost:3000/trolltoll/' + HashGenerator.encodeBase64(id, hashes.trolltoll));
+
     return model;
   }
 };

@@ -7,20 +7,15 @@ module.exports = new mongoose.Schema({
 
   recipient_email: String,
   note: String,
-  created_at: Date,
+  created_at: String,
   total: Number,
   balance: Number,
 
   claimed: [String],
   claims: [String],
 
-  cancelled: String, // false or 'timestamp'
-  cancel: String,
-
-  untrolled: String,  // false or 'timestamp, amount untrolled'
+  cancel: String, // cancel hash or timestamp of action
   untroll: String,
-
-  troll_tolled: String, // false or 'timestamp, toll payed',
   troll_toll: String
 
 });

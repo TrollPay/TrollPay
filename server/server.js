@@ -39,10 +39,12 @@ app.get('/test', routes.test);
 
 // GET Requests
 app.get('/cancel/:lookup', routes.cancelPayment);
+app.get('/venmowh', routes.getwebhook);
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);
-// app.post('/venmo/fetchuser', routes.fetchUser);
+app.post('/venmowh', routes.postwebhook);
+
 
 // Start the server
 var server = app.listen(port, function() {

@@ -34,11 +34,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-// TEST
-app.get('/test', routes.test);
-
 // GET Requests
-app.get('/cancel/:lookup', routes.cancelPayment);
+app.get('/:key/:lookup', routes.updatePayment);
 app.get('/venmowh', routes.getwebhook);
 
 // POST Requests

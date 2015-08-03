@@ -1,20 +1,24 @@
+/******************************* CONSTANT TYPES *******************************/
+var VENMO = require('../../endpoints.js');
+var ACTION = require('../../utils.js').ACTION;
+
+/******************************** NPM MODULES *********************************/
 var _ = require('underscore');
 var Promise = require('bluebird');
-var Mongoose = require('mongoose');
+var Mongoose = Promise.promisifyAll(require('mongoose'));
+var needle = require('needle');
 
+/****************************** GLOBAL IMPORTS ********************************/
 var Utils = require('../../utils.js');
 var HashGenerator = require('./HashGenerator.js');
 
 var PaymentSchema = require('./PaymentSchema.js');
 var Payment = Mongoose.model('Payment', PaymentSchema);
 
-var noteTemplate = _.template(
-  'TrollPay.me (<%= current %> of <%= total %>): <%= note %>'
-);
-
+/******************************* PUBLIC METHODS *******************************/
 /*
  * createNewPaymentModel
- * Creates a new payment model document.
+ * Returns a new payment model with generated hashes, sender id, and timestamp.
  */
 module.exports.createNewPaymentModel = function(payment, sender_id) {
   console.log('Sender ID:', sender_id, 'is creating a new payment');
@@ -27,14 +31,7 @@ module.exports.createNewPaymentModel = function(payment, sender_id) {
     'created_at': timestamp.toISOString(),
     'total': payment.total,
     'balance': payment.total,
-    'claimed': [],
-    'claims': null,
-    'cancelled': false,
-    'cancel': null,
-    'untrolled': false,
-    'untroll': null,
-    'troll_tolled': false,
-    'troll_toll': null
+    'claimed': []
   });
   var id = model.get('_id');
 
@@ -44,50 +41,100 @@ module.exports.createNewPaymentModel = function(payment, sender_id) {
     model.set('claims', hashes.claims);
     model.set('cancel', hashes.cancel);
     model.set('untroll', hashes.untroll);
-    model.set('troll_toll', hashes.trolltoll);
+    model.set('trolltoll', hashes.trolltoll);
 
     console.log('localhost:3000/cancel/' + HashGenerator.encodeBase64(id, hashes.cancel));
-    console.log('localhost:3000/claim/' + HashGenerator.encodeBase64(id, hashes.claim));
     console.log('localhost:3000/untroll/' + HashGenerator.encodeBase64(id, hashes.untroll));
     console.log('localhost:3000/trolltoll/' + HashGenerator.encodeBase64(id, hashes.trolltoll));
-
+    hashes.claims.forEach(function(claim){
+      console.log('localhost:3000/claim/' + HashGenerator.encodeBase64(id, claim));
+    });
     return model;
   }
 };
 
-module.exports.updatePayment = function(payment, body) {
-  console.log('Updating payment model:', payment.id);
-  var installments = module.exports.logInstallment(payment, body);
-  payment.set('balance', payment.get('balance') - 1);
-  payment.set('installments:', installments);
-};
-
-module.exports.makePaymentStub = function(user, payment) {
-  return {
-    'access_token': user.access_token,
-    'email': payment.recipient_email,
-    'note': module.exports.makeNote(payment),
-    'amount': 1
-  };
-};
-
-module.exports.makeNote = function(payment) {
-  var current = Math.floor(payment.total - payment.balance) + 1;
-  var total = Math.floor(payment.total);
-  return noteTemplate({
-    note: payment.note,
-    current: current,
-    total: total
+/*
+ * sendPayment
+ * Resolves with the return body after sending the stub to Venmo via POST.
+ */
+module.exports.sendPayment = function(stub) {
+  console.log('Sending payment to:', stub.email);
+  return new Promise(function(resolve, reject) {
+    if(!stub){ reject(null); }
+    else { needle.post(VENMO.PAYMENTS, stub, cb); }
+    function cb(err, resp, body) {
+      console.log('payment body:', body);
+      if (err) { reject(err); }
+      else { resolve(body); }
+    }
   });
 };
 
-module.exports.logInstallment = function(payment, body){
-  var installments = payment.get('installments');
-  var installment = JSON.stringify({
-    'id': body.payment.id,
-    'amount': body.payment.amount,
-    'date_created': body.payment.date_created
+/*
+ * updatePayment
+ * Resolves with the updated payment document that was saved to the database.
+ */
+module.exports.updatePayment = function(payment, body, hash, type) {
+  if(type === ACTION.CLAIM){
+    console.log('[CLAIM] updating payment id:', payment.get('_id'));
+    payment.set('balance', payment.get('balance') - body.data.payment.amount);
+    payment.set('claimed', insertClaimLog(payment, body, hash));
+    payment.set('claims', filterClaim(payment, hash));
+  }
+  else{ return setPaymentProperties(payment, type); }
+
+  return payment.saveAsync(function(result){ return payment; });
+};
+
+/******************************* PRIVATE METHODS ******************************/
+/*
+ * insertClaimLog
+ * Returns a payment modified with the given hash added to the claimed array.
+ */
+var insertClaimLog = function(payment, body, hash){
+  var claimed = payment.get('claimed');
+  var claim = JSON.stringify({
+    'venmo_payment_id': body.data.payment.id,
+    'amount': body.data.payment.amount,
+    'date_created': body.data.payment.date_created,
+    'hash': hash
   });
-  installments.push(installment);
-  return installments;
+  claimed.push(claim);
+  return claimed;
+};
+
+/*
+ * filterClaim
+ * Returns the payment's array of claim hashes with the given hash removed.
+ */
+var filterClaim = function(payment, hash){
+  var claims = payment.get('claims');
+  return claims.filter(function(claim){ return claim !== hash; });
+};
+
+/*
+ * setPaymentProperties
+ * Modifies the given payment object according to the type.
+ */
+var setPaymentProperties = function(payment, type){
+  var timestamp = new Date();
+
+  if(type === ACTION.CANCEL){
+    payment.set('cancel', timestamp.toISOString());
+    payment.set('untroll', null);
+    payment.set('trolltoll', null);
+  }
+  else if(type === ACTION.UNTROLL){
+    payment.set('cancel', null);
+    payment.set('untroll', timestamp.toISOString());
+    payment.set('trolltoll', null);
+  }
+  else if( type === ACTION.TROLLTOLL){
+    payment.set('cancel', null);
+    payment.set('untroll', null);
+    payment.set('trolltoll', timestamp.toISOString());
+  }
+
+  payment.set('claims', null);
+  payment.set('balance', 0);
 };

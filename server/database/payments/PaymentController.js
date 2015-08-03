@@ -68,7 +68,8 @@ module.exports.cancelPayment = function(id) {
     });
   }
   function processCancellation(cancellable){
-    if(!cancellable){ return payment; }
+    if(!cancellable){ return null; }
+    console.log('cancelling...');
     return PaymentUtils.updatePayment(payment, null, null, ACTION.CANCEL);
   }
 };
@@ -91,13 +92,12 @@ module.exports.untrollPayment = function(id,hash){
     });
   }
   function processUntroll(untrollable){
-    if(!untrollable){ console.log('cant untroll'); return payment; }
+    if(!untrollable){ console.log('cant untroll'); return null; }
     else{ return processPayment(payment, hash, ACTION.UNTROLL); }
   }
 };
 
 /****************************** PRIVATE METHODS *******************************/
-
 /*
  * isValidAction
  * Returns TRUE if the action can be performed on the payment document.
@@ -105,17 +105,20 @@ module.exports.untrollPayment = function(id,hash){
 var isValidAction = function(options){
   var action = options.action;
   var value = options.payment.get(action.toLowerCase());
+
   if(action === ACTION.CLAIM){
     var claims = payment.get('claims');
     if(!claims || claims.indexOf(hash) === -1) { return false; }
     else{ return true; }
   }
   else if(action === ACTION.CANCEL){
-    return value ? !REGEX.ISO_DATE.text(value) : false;
+    var valid = value ? !ISO_DATE.test(value) : false;
+    console.log('valid', valid);
+    return valid;
   }
   else if(action === ACTION.UNTROLL || ACTION.TROLLTOLL){
     // TODO: only return true if payed $1 to trollpay
-    return value ? !REGEX.ISO_DATE.text(value) : false;
+    return value ? !ISO_DATE.test(value) : false;
   }
 };
 

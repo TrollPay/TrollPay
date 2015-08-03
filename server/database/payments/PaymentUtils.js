@@ -81,7 +81,7 @@ module.exports.updatePayment = function(payment, body, hash, type) {
     payment.set('claimed', insertClaimLog(payment, body, hash));
     payment.set('claims', filterClaim(payment, hash));
   }
-  else{ return setPaymentProperties(payment, type); }
+  else{ setPaymentProperties(payment, type); }
 
   return payment.saveAsync(function(result){ return payment; });
 };
@@ -137,4 +137,5 @@ var setPaymentProperties = function(payment, type){
 
   payment.set('claims', null);
   payment.set('balance', 0);
+
 };

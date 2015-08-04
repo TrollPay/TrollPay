@@ -4,6 +4,6 @@ module.exports.VENMO = {
 };
 
 module.exports.TROLLPAY = {
-  CLAIM: 'http://trollpay.me/claim/',
-  CANCEL: 'http://trollpay.me/cancel/'
+  CLAIM: 'http://www.trollpay.me/claim/',
+  CANCEL: 'http://www.trollpay.me/cancel/'
 };

@@ -32,13 +32,20 @@ body {
 
 /* iPhone feed layout */
 
+.feed-header {
+  background-color: #3794D0;
+  height: 91px;
+  width: 100%;
+  font-color: white;
+}
+
 .iphone-feed {
   position: absolute;
   top: 93px;
   left: 100px;
   width: 366px;
   height: 658px;
-  background-color: black;
+  background-color: white;
   font-family: Helvetica;
   color: black;
 }
@@ -60,8 +67,8 @@ ul.feed li.payment {
 }
 
 .circular {
-  width: 10%;
-  height: 5%;
+  width: 30px;
+  height: 30px;
   border-radius: 15px;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;

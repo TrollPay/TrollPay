@@ -37,28 +37,30 @@ module.exports.createPayment = function(req, res) {
     });
 
   function tradeCodeForVenmoData(code){
-    console.log('trading code for venmo data');
+    console.log('[NEW] Trading user\'s code for venmo data...');
     return UserController.fetchUserFromVenmo(code);
   }
 
   function lookupSenderByVenmoId(venmo_data) {
-    console.log('looking up sender by venmo id');
+    console.log('[NEW] Looking up sender by venmo id...');
     venmo = venmo_data;
     return UserController.lookupSenderByVenmoId(venmo.user.id);
   }
 
   function storeUserVenmoData(user) {
+    console.log('[NEW] Saving sender in user collection...');
     if (!user){ user = UserUtils.createNewUserModel(venmo, ip); }
     else{ user = UserUtils.updateUserModel(user, venmo, ip); }
     return UserController.upsertUser(user);
   }
 
   function addPayment(user) {
-    console.log('sender', user);
+    console.log('[NEW] Adding payment document...');
     return PaymentController.addPayment(payment, user);
   }
 
   function sendEmails(details){
+    console.log('[SUCCESS] Sending emails to sender and recipient.\n');
     return EmailController.sendWelcomeEmails(details.sender, details.payment);
   }
 

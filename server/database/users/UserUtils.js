@@ -8,8 +8,7 @@ var User = Mongoose.model('User', userSchema);
  * Creates a new user model document.
  */
 module.exports.createNewUserModel = function(venmo, ip) {
-  console.log('venmo', JSON.stringify(venmo));
-  console.log('Creating new user model:', venmo.user.id);
+  console.log('[NEW] Creating new user model:', venmo.user.id);
   var join_date = new Date();
   return new User({
     venmo_id: venmo.user.id,
@@ -34,7 +33,7 @@ module.exports.createNewUserModel = function(venmo, ip) {
  * Returns an updated user model document.
  */
 module.exports.updateUserModel = function(user, update, ip) {
-  console.log('Updating user model:', user.venmo_id);
+  console.log('[UPDATE] Updating user model:', user.venmo_id);
   var ip_log = user.get('ip_log');
   ip_log.push(ip);
   user.set('access_token', update.access_token);
@@ -52,18 +51,15 @@ module.exports.updateUserModel = function(user, update, ip) {
 };
 
 module.exports.createVenmoLookupObject = function(code){
-  console.log('creating venmo lookup object');
- var obj = {
+  var obj = {
     'client_id': process.env.APP_ID,
     'client_secret': process.env.API_SECRET,
     'code': code
   };
-  console.log(JSON.stringify(obj));
   return obj;
 };
 
 module.exports.createUserObject = function(body){
-  console.log('creating user object');
   return {
     'user': body.user,
     'access_token': body.access_token,

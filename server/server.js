@@ -33,7 +33,7 @@ db.once('open', function() {
 // 2. Instantiate the express object
 var app = express();
 
-// 2. Set up middleware
+// 3. Set up middleware
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,12 +45,6 @@ app.get('/:key/:lookup', routes.updatePayment);
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);
-
-// TEST
-var EmailUtils = require('./database/emails/EmailUtils.js');
-app.get('/test', function(req, res){
- res.send('cool');
-});
 
 /******************************** START SERVER ********************************/
 

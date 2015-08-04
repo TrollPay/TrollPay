@@ -46,7 +46,7 @@ module.exports.claimPayment = function(id, hash){
   function getPayment(id){
     return Payment.findByIdAsync(id).then(function(doc){
       payment = doc;
-      return { 'payment': payment, 'action': ACTION.CLAIM };
+      return { 'payment': payment, 'action': ACTION.CLAIM, 'hash': hash };
     });
   }
   function processClaim(claimable){
@@ -89,13 +89,12 @@ var isValidAction = function(options){
   var value = options.payment.get(action.toLowerCase());
 
   if(action === ACTION.CLAIM){
-    var claims = payment.get('claims');
-    if(!claims || claims.indexOf(hash) === -1) { return false; }
+    var claims = options.payment.get('claims');
+    if(!claims || claims.indexOf(options.hash) === -1) { return false; }
     else{ return true; }
   }
   else if(action === ACTION.CANCEL){
     var valid = value ? !ISO_DATE.test(value) : false;
-    console.log('valid', valid);
     return valid;
   }
 };
@@ -105,12 +104,13 @@ var isValidAction = function(options){
  * Sends money through Venmo then updates the payment document.
  */
 var processPayment = function(payment, hash, type) {
-    return UserController.lookupSenderByVenmoId(payment.sender_id)
+    return UserController.lookupSenderById(payment.sender_id)
       .then(makePaymentStub)
       .then(PaymentUtils.sendPayment)
       .then(updatePayment);
 
   function makePaymentStub(user){
+    console.log(user);
     return PaymentStubGenerator.makeStub(user, payment, type);
   }
 

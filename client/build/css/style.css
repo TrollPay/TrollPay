@@ -8,6 +8,100 @@ body {
   font-weight: 400;
 }
 
+/* Make the hero content wider to fit the iPhone image in the page */
+#hero {
+  max-width: 1160px;
+}
+
+/* Media queries for the iphone hero image */
+@media (max-width: 1100px){
+  img#iphone {
+    width: 350px;
+  }
+}
+@media (max-width: 800px){
+  img#iphone {
+    width: 200px;
+  }
+}
+@media (max-width: 650px){
+  img#iphone {
+    display: none;
+  }
+}
+
+/* iPhone feed layout */
+
+.feed-header {
+  background-color: #3794D0;
+  height: 91px;
+  width: 100%;
+  font-color: white;
+}
+
+.iphone-feed {
+  position: absolute;
+  top: 93px;
+  left: 100px;
+  width: 366px;
+  height: 658px;
+  background-color: white;
+  font-family: Helvetica;
+  color: black;
+}
+
+ul.feed {
+  padding: 0;
+  list-style-type: none;
+}
+
+ul.feed li.payment {
+  list-style-type: none;
+  position: relative;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #d7d7d9;
+  background: #ffffff;
+  min-height: 55px;
+  overflow: auto;
+}
+
+.circular {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  float: left;
+  }
+
+.names {
+  font-weight: bold;
+}
+
+.payment-text {
+  float: left;
+  width: 85%;
+  margin-left: 5%;
+}
+
+.payment-text p {
+  margin: 0 0 0px;
+}
+
+.ago {
+  /*margin-left: 10px;*/
+  float: right;
+}
+
+/* Styling for our pitch div */
+
+ul#pitch {
+  text-align: left;
+  list-style-type: decimal;
+  font-size: 16px;
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,

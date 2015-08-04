@@ -53,32 +53,49 @@ var Confirm = React.createClass({
       }
     }
     return (
-      <div>
-        <div id="progressBar" className="progress" style={style.show}>
-          <div className="progress-bar progress-bar-striped active" 
-          role="progressbar" aria-valuenow="45" aria-valuemin="0" 
-          aria-valuemax="100" style={style.barWidth}>
-            <span className="sr-only">45% Complete</span>
-          </div>
+        <div className="panel panel-default">
+            <div className="panel-heading">
+              <ul id="user-progress" className="nav nav-pills nav-justified" role="tablist">
+                <li id="create" role="presentation">
+                  <a>Create Payment</a>
+                </li>
+                <li id="authorize" role="presentation">
+                  <a>Authorize with Venmo</a>
+                </li>
+                <li id="confirm" role="presentation">
+                  <a>Confirm Payment</a>
+                </li>
+              </ul>
+            </div>
+            <div className="panel-body"> 
+              <div>
+                <div id="progressBar" className="progress" style={style.show}>
+                  <div className="progress-bar progress-bar-striped active" 
+                  role="progressbar" aria-valuenow="45" aria-valuemin="0" 
+                  aria-valuemax="100" style={style.barWidth}>
+                    <span className="sr-only">45% Complete</span>
+                  </div>
+                </div>
+                <div>
+                  <h4>Total Amount</h4>
+                  <p>{this.state.total}</p>
+                </div>
+                <div>
+                  <h4>Custom Note</h4>
+                  <p>{this.state.note}</p>
+                </div>
+                <div>
+                  <h4>Recipient email</h4>
+                  <p>{this.state.recipient_email}</p>
+                </div>
+                <form onSubmit={this.handleSubmit}>
+                  <input type="submit"> 
+                    <Link to="completed" />
+                  </input>
+                </form>
+              </div>
+            </div>
         </div>
-        <div>
-          <h4>Total Amount</h4>
-          <p>{this.state.total}</p>
-        </div>
-        <div>
-          <h4>Custom Note</h4>
-          <p>{this.state.note}</p>
-        </div>
-        <div>
-          <h4>Recipient email</h4>
-          <p>{this.state.recipient_email}</p>
-        </div>
-        <form onSubmit={this.handleSubmit}>
-          <input type="submit"> 
-            <Link to="completed" />
-          </input>
-        </form>
-      </div>
     );
   }
 });

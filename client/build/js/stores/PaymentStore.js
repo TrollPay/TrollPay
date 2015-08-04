@@ -1,4 +1,3 @@
-
 var PaymentStore = {
   payment: null,
   sender: null,

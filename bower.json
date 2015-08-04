@@ -21,6 +21,7 @@
     "normalize.css": "~3.0.3",
     "flux": "~2.0.2",
     "microevent": "~1.1.1",
-    "url": "*"
+    "url": "*",
+    "jquery": "~2.1.4"
   }
 }

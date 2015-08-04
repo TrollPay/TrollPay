@@ -36,16 +36,33 @@ var Signup = React.createClass({
 
   render: function() {
     return (
-      <div>
-      <form className="form-horizontal" onSubmit={this.handleSubmit}>
-        <fieldset>
-          <Input type='Recipient' />
-          <Input type='Amount' />
-          <Input type='Note' />
-          <Input type='Submit' />
-        </fieldset>
-      </form>
-    </div>
+      <div className="panel panel-default">
+          <div className="panel-heading">
+            <ul id="user-progress" className="nav nav-pills nav-justified" role="tablist">
+              <li id="create" role="presentation">
+                <a>Create Payment</a>
+              </li>
+              <li id="authorize" role="presentation">
+                <a>Authorize with Venmo</a>
+              </li>
+              <li id="confirm" role="presentation">
+                <a>Confirm Payment</a>
+              </li>
+            </ul>
+          </div>
+          <div className="panel-body"> 
+
+            <form className="form-horizontal" onSubmit={this.handleSubmit}>
+              <fieldset>
+                <Input type='Recipient' />
+                <Input type='Amount' />
+                <Input type='Note' />
+                <Input type='Submit' />
+              </fieldset>
+            </form>
+
+          </div>
+      </div>
     );
   }
 });

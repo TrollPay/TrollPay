@@ -10,6 +10,8 @@ var Utils = require('./EmailUtils.js');
 var PaymentSchema = require('../payments/PaymentSchema.js');
 var Payment = Mongoose.model('Payment', PaymentSchema);
 
+var UserController = require('../users/UserController.js');
+
 /******************************* PUBLIC METHODS *******************************/
 
 /*
@@ -40,9 +42,15 @@ module.exports.sendDailyEmails = function(){
   }
 
   function sendEmails(payments){
-    var properties = payments.map(function(payment){
-      // return { sender}
+    var promises = payments.map(function(payment){
+      return UserController.lookupSenderById(payment.sender_id)
+      .then(function(sender){ return Utils.getVictimEmail(sender, payment); });
     });
+
+    Promise.all(promises).then(function(emails){
+      return Promise.all(emails.map(Utils.sendEmail));
+    });
+
   };
 
 };

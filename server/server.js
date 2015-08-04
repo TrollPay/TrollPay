@@ -8,6 +8,10 @@ var express = require('express');
 var Mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
+/***************************** GLOBAL IMPORTS *********************************/
+
+var cron = require('./cron.js');
+
 /*************************** IMPORT ROUTES/WEBHOOKS ***************************/
 
 var routes = {
@@ -51,3 +55,8 @@ app.post('/payment/create', routes.createPayment);
 var server = app.listen(port, function() {
   console.log('Listening on port:', port);
 });
+
+/****************************** LAUNCH CRON JOB *******************************/
+
+ cron.setCron();
+

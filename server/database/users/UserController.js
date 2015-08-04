@@ -6,7 +6,7 @@ var userSchema = require('./UserSchema.js');
 var Utils = require('./UserUtils.js');
 var User = Mongoose.model('User', userSchema);
 
-var VENMO = require('../../endpoints.js');
+var VENMO = require('../../endpoints.js').VENMO;
 
 /*
  * fetchUserFromVenmo
@@ -52,12 +52,13 @@ module.exports.lookupSenderByVenmoId = function(venmo_id) {
  * Resolves with the venmo id of the upserted user.
  */
 module.exports.upsertUser = function(user) {
+  console.log('Upserting user', user.venmo_id);
   user = user.toObject();
   return new Promise(function(resolve, reject) {
     User.update({ 'venmo_id': user.venmo_id }, user, { upsert: true }, cb);
     function cb(err, saved) {
       if (err) { reject(err); }
-      else { resolve(user.venmo_id); }
+      else { resolve(user); }
     }
   });
 };

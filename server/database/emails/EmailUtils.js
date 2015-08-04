@@ -91,7 +91,6 @@ module.exports.getVictimEmail = function(sender, payment){
 };
 
 module.exports.sendEmail = function(email){
-  console.log('email', email);
   return new Promise(function(resolve, reject){
     client.sendMail(email, function(err, info) {
       if(err){ reject(err); }

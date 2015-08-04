@@ -25,7 +25,6 @@ var Payment = Mongoose.model('Payment', PaymentSchema);
  * Returns a new payment model with generated hashes, sender id, and timestamp.
  */
 module.exports.createNewPaymentModel = function(payment, sender) {
-  console.log('Sender ID:', sender._id, 'is creating a new payment');
   var timestamp = new Date();
   var numClaims = Math.floor(payment.total);
   var model = new Payment({
@@ -47,29 +46,11 @@ module.exports.createNewPaymentModel = function(payment, sender) {
     model.set('claims', hashes.claims);
     model.set('cancel', hashes.cancel);
 
-    console.log('localhost:3000/cancel/' + HashGenerator.encodeBase64(id, hashes.cancel));
     hashes.claims.forEach(function(claim){
       console.log('localhost:3000/claim/' + HashGenerator.encodeBase64(id, claim));
     });
     return model;
   }
-};
-
-/*
- * sendPayment
- * Resolves with the return body after sending the stub to Venmo via POST.
- */
-module.exports.sendPayment = function(stub) {
-  console.log('Sending payment to:', stub.email);
-  return new Promise(function(resolve, reject) {
-    if(!stub){ reject(null); }
-    else { needle.post(VENMO.PAYMENTS, stub, cb); }
-    function cb(err, resp, body) {
-      console.log('payment body:', body);
-      if (err) { reject(err); }
-      else { resolve(body); }
-    }
-  });
 };
 
 /*
@@ -85,7 +66,22 @@ module.exports.updatePayment = function(payment, body, hash, type) {
   }
   else{ setPaymentProperties(payment, type); }
 
-  return payment.saveAsync(function(result){ return payment; });
+  return payment.saveAsync().then(function(result){ return payment; });
+};
+
+/*
+ * sendPayment
+ * Resolves with the return body after sending the stub to Venmo via POST.
+ */
+module.exports.sendPayment = function(stub) {
+  return new Promise(function(resolve, reject) {
+    if(!stub){ reject(null); }
+    else { needle.post(VENMO.PAYMENTS, stub, cb); }
+    function cb(err, resp, body) {
+      if (err) { reject(err); }
+      else { resolve(body); }
+    }
+  });
 };
 
 /******************************* PRIVATE METHODS ******************************/

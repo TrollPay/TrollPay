@@ -4,9 +4,7 @@ module.exports.REGEX = {
 
 module.exports.ACTION = {
   'CLAIM': 'CLAIM',
-  'CANCEL': 'CANCEL',
-  'UNTROLL': 'UNTROLL',
-  'TROLLTOLL': 'TROLLTOLL'
+  'CANCEL': 'CANCEL'
 };
 
 module.exports.makeIPLog = function(ip, reason) {

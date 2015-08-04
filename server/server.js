@@ -1,22 +1,28 @@
-// Default Modules
-var Url = require('url'); // https://nodejs.org/api/url.html
+/******************************* DEFAULT MODULES ******************************/
+
 var path = require('path');
 
-// NPM Modules
+/******************************* NPM MODULES **********************************/
+
 var express = require('express');
 var Mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-// Local Modules
-var routes = require('./routes.js');
+/*************************** IMPORT ROUTES/WEBHOOKS ***************************/
 
-// Set environment variables
-var api_secret = process.env.API_SECRET;
-var app_id = process.env.APP_ID;
+var routes = {
+  'createPayment': require('./routes/createPayment.js').createPayment,
+  'updatePayment': require('./routes/updatePayment.js').updatePayment
+};
+
+/**************************** ENVIRONMENT VARIABLES ***************************/
+
 var mongo_host = process.env.MONGOLAB_URI;
 var port = process.env.PORT;
 
-// Connect to MongoDB
+/****************************** CONFIGURE SERVER ******************************/
+
+// 1. Connect to MongoDB
 Mongoose.connect(mongo_host);
 var db = Mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -24,26 +30,30 @@ db.once('open', function() {
   console.log('Connected to MongoDB.');
 });
 
-// Instantiate the express object
+// 2. Instantiate the express object
 var app = express();
 
-// Serve static assets automatically (eg: index.html, vendor assets, etc);
+// 2. Set up middleware
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+/*************************** HANDLE ROUTES/WEBHOOKS ***************************/
 
 // GET Requests
 app.get('/:key/:lookup', routes.updatePayment);
-app.get('/venmowh', routes.getwebhook);
 
 // POST Requests
 app.post('/payment/create', routes.createPayment);
-app.post('/venmowh', routes.postwebhook);
 
+// TEST
+var EmailUtils = require('./database/emails/EmailUtils.js');
+app.get('/test', function(req, res){
+ res.send('cool');
+});
 
-// Start the server
+/******************************** START SERVER ********************************/
+
 var server = app.listen(port, function() {
   console.log('Listening on port:', port);
 });

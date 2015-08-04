@@ -1,0 +1,21 @@
+<p>Dear Friend of {{ SENDER_NAME }},<p>
+
+<p>It appears that {{ SENDER_NAME }} owes you some money, and they have decided
+to pay you back in the least convenient way possible. Sorry!</p>
+
+<p><strong>Troll Payment Details</strong></p>
+<p><strong>Total:</strong> ${{ TOTAL }}</p>
+<p><strong>Balance:</strong> ${{ BALANCE }}</p>
+<p><strong>Reason:</strong> {{ NOTE }}</p>
+
+<p>Every day for the next {{ NUM_DAYS_LEFT }} days, you will receive an email
+from <a href="http://trollpay.me">TrollPay.me</a> with a link to claim $1 of the remaining balance via Venmo.</p>
+
+<p>Claim your $1 today by clicking this link:<br />
+<a href="{{ CLAIM_LINK }}">{{ CLAIM_LINK }}</a></p>
+
+<p>That's it! One day down, just another {{ NUM_DAYS_LEFT_DECREMENT }} days left to go!</p>
+
+<p>Talk soon,</p>
+<p>TrollPay.me</p>
+<p>"Send money to your friends in $1 per day installments!"</p>

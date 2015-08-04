@@ -1,34 +1,48 @@
+/******************************** NPM MODULES *********************************/
+
 var Promise = require('bluebird');
+var Mongoose = Promise.promisifyAll(require('mongoose'));
+var _ = require('underscore');
+
+/******************************* GLOBAL IMPORTS *******************************/
 
 var Utils = require('./EmailUtils.js');
+var PaymentSchema = require('../payments/PaymentSchema.js');
+var Payment = Mongoose.model('Payment', PaymentSchema);
 
-module.exports.sendWelcomeEmails = function(sender, recipient){
-  var emails = [
-    Utils.getTrollWelcomeEmail(sender),
-    Utils.getVictimWelcomeEmail(recipient)
+/******************************* PUBLIC METHODS *******************************/
+
+/*
+ * sendWelcomeEmails
+ * Sends the welcome email to the sender and the recipient.
+ */
+module.exports.sendWelcomeEmails = function(sender, payment){
+  var promises = [
+    Utils.getTrollEmail(sender, payment),
+    Utils.getVictimEmail(sender, payment)
   ];
-  return Promise.all(emails.map(Utils.sendEmail));
+  Promise.all(promises)
+  .then(function(emails){
+    return Promise.all(emails.map(Utils.sendEmail));
+  });
 };
 
 /*
- * processPayments
- * Calls processPayment on each payment in the database.
+ * sendDailyEmails
+ * Sends the daily email out to victims in the payment collection where valid.
  */
-module.exports.processPayments = function() {
-  return new Promise(function(resolve, reject) {
-    Payment.find({}, cb);
-    function cb(err, payments) {
-      if (err) { reject(err); }
-      else {
-        payments = payments.filter(filter);
-        payments = payments.map(module.exports.processPayment);
-        resolve(Promise.all(payments));
-       }
-    }
-    function filter(payment){
-      return !(payment.get('cancelled') ||
-        payment.get('untrolled') ||
-        payment.get('trollTolled'));
-    }
-  });
+module.exports.sendDailyEmails = function(){
+  findValidPayments()
+  .then(sendEmails);
+
+  function findValidPayments(){
+    return Payment.find({}).where('balance').gt(0).execAsync();
+  }
+
+  function sendEmails(payments){
+    var properties = payments.map(function(payment){
+      // return { sender}
+    });
+  };
+
 };

@@ -19,6 +19,7 @@
     "gulp-plumber": "^1.0.0",
     "gulp-react": "^3.0.1",
     "gulp-uglify": "^1.2.0",
+    "handlebars": "^3.0.3",
     "js-base64": "^2.1.9",
     "mongoose": "^4.0.3",
     "needle": "^0.9.2",

@@ -28,6 +28,5 @@ var makeNote = function(payment) {
 var getAmount = function(payment, type){
   var balance = payment.get('balance');
   if(type === ACTION.CLAIM){ return balance < 2 ? balance : 1; }
-  if(type === ACTION.UNTROLL || ACTION.TROLLTOLL) { return balance; }
 };
 

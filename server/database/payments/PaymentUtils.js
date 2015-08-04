@@ -1,14 +1,17 @@
 /******************************* CONSTANT TYPES *******************************/
-var VENMO = require('../../endpoints.js');
+
+var VENMO = require('../../endpoints.js').VENMO;
 var ACTION = require('../../utils.js').ACTION;
 
 /******************************** NPM MODULES *********************************/
+
 var _ = require('underscore');
 var Promise = require('bluebird');
 var Mongoose = Promise.promisifyAll(require('mongoose'));
 var needle = require('needle');
 
 /****************************** GLOBAL IMPORTS ********************************/
+
 var Utils = require('../../utils.js');
 var HashGenerator = require('./HashGenerator.js');
 
@@ -16,16 +19,19 @@ var PaymentSchema = require('./PaymentSchema.js');
 var Payment = Mongoose.model('Payment', PaymentSchema);
 
 /******************************* PUBLIC METHODS *******************************/
+
 /*
  * createNewPaymentModel
  * Returns a new payment model with generated hashes, sender id, and timestamp.
  */
-module.exports.createNewPaymentModel = function(payment, sender_id) {
-  console.log('Sender ID:', sender_id, 'is creating a new payment');
+module.exports.createNewPaymentModel = function(payment, sender) {
+  console.log('Sender ID:', sender._id, 'is creating a new payment');
   var timestamp = new Date();
   var numClaims = Math.floor(payment.total);
   var model = new Payment({
-    'sender_id': sender_id,
+    'sender_id': sender._id,
+    'sender_first_name': sender.sender_first_name,
+    'sender_last_name': sender.sender_last_name,
     'recipient_email': payment.recipient_email,
     'note': payment.note,
     'created_at': timestamp.toISOString(),
@@ -40,12 +46,8 @@ module.exports.createNewPaymentModel = function(payment, sender_id) {
   function setHashes(hashes){
     model.set('claims', hashes.claims);
     model.set('cancel', hashes.cancel);
-    model.set('untroll', hashes.untroll);
-    model.set('trolltoll', hashes.trolltoll);
 
     console.log('localhost:3000/cancel/' + HashGenerator.encodeBase64(id, hashes.cancel));
-    console.log('localhost:3000/untroll/' + HashGenerator.encodeBase64(id, hashes.untroll));
-    console.log('localhost:3000/trolltoll/' + HashGenerator.encodeBase64(id, hashes.trolltoll));
     hashes.claims.forEach(function(claim){
       console.log('localhost:3000/claim/' + HashGenerator.encodeBase64(id, claim));
     });
@@ -87,6 +89,7 @@ module.exports.updatePayment = function(payment, body, hash, type) {
 };
 
 /******************************* PRIVATE METHODS ******************************/
+
 /*
  * insertClaimLog
  * Returns a payment modified with the given hash added to the claimed array.
@@ -118,24 +121,7 @@ var filterClaim = function(payment, hash){
  */
 var setPaymentProperties = function(payment, type){
   var timestamp = new Date();
-
-  if(type === ACTION.CANCEL){
-    payment.set('cancel', timestamp.toISOString());
-    payment.set('untroll', null);
-    payment.set('trolltoll', null);
-  }
-  else if(type === ACTION.UNTROLL){
-    payment.set('cancel', null);
-    payment.set('untroll', timestamp.toISOString());
-    payment.set('trolltoll', null);
-  }
-  else if( type === ACTION.TROLLTOLL){
-    payment.set('cancel', null);
-    payment.set('untroll', null);
-    payment.set('trolltoll', timestamp.toISOString());
-  }
-
+  if(type === ACTION.CANCEL){ payment.set('cancel', timestamp.toISOString()); }
   payment.set('claims', null);
   payment.set('balance', 0);
-
 };

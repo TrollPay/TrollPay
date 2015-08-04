@@ -1,4 +1,9 @@
 var Home = React.createClass({
+  getInitialState: function () {
+    return {
+      feedpayments: FeedStore.feedPayments
+    };
+  },
   componentDidMount: function() {
     setInterval(this.scrollFeed, 1000);
   },
@@ -24,32 +29,16 @@ var Home = React.createClass({
 
                 <div className="feed-header">
                   <div className="toprow">
-                    <img style={styles.img} id="iphone-header" src="./assets/iphone-action-bar.png" />
+                    <img style={styles.img} id="iphone-header" 
+                    src="./assets/iphone-action-bar.png" />
                   </div>
                 </div>
-
-                <div className="payment-wrapper">
-                  <li className="payment">
-                    <div className="payment-top">
-                      <img className="circular" src="./assets/profilepic.jpg" />
-                      <div className="payment-text">
-                        <p>
-                          <span className="names">Kendall F</span> paid 
-                          <span className="names">Mary Margaret H</span>
-                          <span className="ago">1m</span>
-                        </p>
-                        <p>
-                          Pony Farts
-                        </p>
-                        <p>
-                          <span className="like">Like</span>
-                          <span className="comment">Comment</span>
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                
+                {this.state.feedpayments.map(function(payment) {
+                  return (
+                  <FeedPayment payer={payment.payer} payee={payment.payee} 
+                  ago={payment.ago} message={payment.message} />
+                  )
+                })}
               </ul>
             </div>
           </div>
@@ -58,10 +47,25 @@ var Home = React.createClass({
           <Signup />
           <div id="pitch" className="text-center">
             <h3>How TrollPay Works</h3>
-            <ul>
-              <li>Asymmetrical tilde trust fund art party, DIY slow-carb Williamsburg stumptown.</li>
-              <li>Cred freegan narwhal listicle, Wes Anderson yr pug semiotics single-origin</li>
-              <li>Normcore wayfarers mumblecore sriracha.Salvia blog meditation, post-ironic vegan</li>
+            <ul id="pitch">
+              <li>
+                <p>
+                  Owe a friend some money? Pay them 
+                  back $1 at a time with TrollPay!
+                </p>
+              </li>
+              <li>
+                <p>
+                  Create a payment in the form above and TrollPay will 
+                  send your friend $1 every day via Venmo
+                </p>
+              </li>
+              <li>
+                <p>
+                  Once you've created a payment just sit back, relax, 
+                  and watch your Victim suffer!
+                </p>
+              </li>
             </ul>
           </div>
         </div>

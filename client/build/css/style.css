@@ -94,6 +94,14 @@ ul.feed li.payment {
   float: right;
 }
 
+/* Styling for our pitch div */
+
+ul#pitch {
+  text-align: left;
+  list-style-type: decimal;
+  font-size: 16px;
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,

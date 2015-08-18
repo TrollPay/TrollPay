@@ -8,7 +8,7 @@ var FeedPayment = React.createClass({
           <img className="circular" src="./assets/profilepic.jpg" />
           <div className="payment-text">
             <p>
-              <span className="names">{this.props.payer}</span> paid 
+              <span className="names">{this.props.payer}</span><span> paid </span>  
               <span className="names">{this.props.payee}</span>
               <span className="ago">{this.props.ago}</span>
             </p>
@@ -16,7 +16,7 @@ var FeedPayment = React.createClass({
               {this.props.message}
             </p>
             <p>
-              <span className="like">Like</span>
+              <span className="like">Like </span>
               <span className="comment">Comment</span>
             </p>
           </div>
